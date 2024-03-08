@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Wander</string>
+    <string name="this_app_name">Wander</string>
+    <string name="continue_button">continue</string>
+    <string name="user_name">Enter your name</string>
+    <string name="expand_button_content_description">expand_button_content_description</string>
+    <string name="about">About:</string>
+
+
+
+    <string name="PlaceList1">I am strong.</string>
+    <string name="PlaceList2">I believe in myself.</string>
+    <string name="PlaceList3">Each day</string>
+    <string name="PlaceList4">Every challenge .</string>
+    <string name="PlaceList5">I have so much to be grateful for.</string>
+    <string name="PlaceList6">Good things are always coming into my life.</string>
+    <string name="PlaceList7">New opportunities await me at every turn.</string>
+    <string name="PlaceList8">I have the courage to follow my heart.</string>
+    <string name="PlaceList9">Things will unfold at precisely the right time.</string>
+    <string name="PlaceList10">I will be present in all the moments that this day brings.</string>
+
+    <string name="place_description_1">Eating treats on the terrace</string>
+    <string name="place_description_2">Barking at Daddy</string>
+    <string name="place_description_3">Stealing socks</string>
+    <string name="place_description_4">Meeting new animals</string>
+    <string name="place_description_5">Digging in the garden</string>
+    <string name="place_description_6">Chasing sea foam</string>
+    <string name="place_description_7">Bothering her paw-rents</string>
+    <string name="place_description_8">Sunbathing</string>
+    <string name="place_description_9">Sleeping in dangerous places</string>
+    <string name="place_description_10">Sleeping in dangerous places</string>
+</resources>
