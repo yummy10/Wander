@@ -35,6 +35,7 @@ import com.example.wander.ui.theme.WanderTheme
 @Composable
 fun Greeting(WViewModel: WViewModel = viewModel(),
              message: String,
+             continueButtonClicked: () -> Unit,
              modifier: Modifier = Modifier
 ) {
     val image = painterResource(R.drawable.world)
@@ -62,7 +63,7 @@ fun Greeting(WViewModel: WViewModel = viewModel(),
         )
         Spacer(modifier = Modifier.height(90.dp))
         EditUserName(name.yourName, onValueChange = {WViewModel.updateUsername(it)}, modifier = Modifier)
-        Button(onClick = {WViewModel.continuebutton()}) {
+        Button(onClick = {continueButtonClicked()}) {
             Text(
                 stringResource(R.string.continue_button),
                 style = MaterialTheme.typography.displayMedium)
@@ -78,7 +79,6 @@ fun EditUserName(name:String,
                  onValueChange: (String) -> Unit,
                  modifier: Modifier = Modifier
 ) {
-    var name=name
     TextField(
         label = { Text(stringResource(R.string.user_name)) },
         value = name,
@@ -101,6 +101,7 @@ fun Greetingview() {
         //darkTheme = true
     ) {
         Greeting(message=stringResource(R.string.app_name),
+            continueButtonClicked = {},
             modifier = Modifier.verticalScroll(rememberScrollState())//建立垂直捲軸,
                 .fillMaxSize()
                 .wrapContentSize(Alignment.Center))

@@ -13,7 +13,5 @@ class WViewModel: ViewModel() {
     fun updateUsername(uname: String){
         _name.value= Name(yourName=uname)
     }
-    fun continuebutton(){
 
-    }
 }
