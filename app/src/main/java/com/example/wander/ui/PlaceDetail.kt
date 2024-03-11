@@ -34,7 +34,7 @@ import com.example.wander.model.UiState
 import com.example.wander.ui.theme.WanderTheme
 
 @Composable
-fun placeDetail(wViewModel: WViewModel,uiState: UiState, modifier: Modifier = Modifier){
+fun PlaceDetail(wViewModel: WViewModel,uiState: UiState, modifier: Modifier = Modifier){
     val onBackPressed = {wViewModel.resetHomeScreenStates()}
     BackHandler {
         onBackPressed()
@@ -128,6 +128,6 @@ private fun CardPreview() {
     WanderTheme{
         val WViewModel: WViewModel = viewModel()
         val uiState by WViewModel.uiState.collectAsState()
-        placeDetail(WViewModel,uiState)
+        PlaceDetail(WViewModel,uiState)
     }
 }
