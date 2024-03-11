@@ -54,7 +54,7 @@ fun PalceApp(){
         PalceList(wViewModel,uiState)
     }else
     {
-        placeDetail(wViewModel,uiState)
+        PlaceDetail(wViewModel,uiState)
     }
 
 }
