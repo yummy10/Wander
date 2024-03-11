@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,31 +38,44 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wander.R
-import com.example.wander.data.Datasource
 import com.example.wander.model.PlaceList
+import com.example.wander.model.UiState
 import com.example.wander.ui.components.WanderTopAppBar
 import com.example.wander.ui.theme.WanderTheme
 
 @Composable
-fun palceApp(){
-    palceList(placeList= Datasource().loadPlaceLists())
+fun PalceApp(){
+    val wViewModel: WViewModel = viewModel()
+    val uiState by wViewModel.uiState.collectAsState()
+
+    if (uiState.isShowingPlaceList) {
+        PalceList(wViewModel,uiState)
+    }else
+    {
+        placeDetail(wViewModel,uiState)
+    }
+
 }
 
 
 
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun palceList(placeList:List<PlaceList>, modifier: Modifier = Modifier){
+fun PalceList(wViewModel: WViewModel,uiState: UiState, modifier: Modifier = Modifier){
+
+    val currentplacelist = uiState.currentplacelist
     Scaffold(
         topBar = {
             WanderTopAppBar()
         }
-    ){it ->
+    ){
         LazyColumn(contentPadding = it,modifier = modifier) {
-            items(placeList) {place->
-                palceListCard(
+            items(currentplacelist) {place->
+                PalceListCard(
                     place=place,
+                    wViewModel=wViewModel,
                     modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
                 )
 
@@ -71,9 +86,9 @@ fun palceList(placeList:List<PlaceList>, modifier: Modifier = Modifier){
 }
 
 @Composable
-fun palceListCard(place:PlaceList, modifier: Modifier = Modifier) {
+fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
-    Card(modifier = modifier) {
+    Card(modifier = modifier,) {
         Column(
             modifier=Modifier.animateContentSize(//已展開和未展開狀態之間的轉場效果
                 animationSpec = spring<IntSize>(
@@ -83,11 +98,13 @@ fun palceListCard(place:PlaceList, modifier: Modifier = Modifier) {
             )
         ) {
             Image(
+
                 painter = painterResource(place.imageResourceId),
                 contentDescription =stringResource(place.stringResourceId) ,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(194.dp),
+                    .height(194.dp)
+                    .clickable {wViewModel.detailsScreenStates(place)} ,
                 contentScale = ContentScale.Crop
             )
             Row{
@@ -155,6 +172,6 @@ fun PlaceIntro(
 @Composable
 private fun CardPreview() {
     WanderTheme{
-        palceApp()
+        PalceApp()
     }
 }

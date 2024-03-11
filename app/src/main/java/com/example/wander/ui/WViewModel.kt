@@ -9,6 +9,7 @@ import com.example.wander.model.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class WViewModel: ViewModel() {
     private val _name = MutableStateFlow(Name())
@@ -23,12 +24,29 @@ class WViewModel: ViewModel() {
         initializeUIState()
     }
     private fun initializeUIState() {
-        var placedate: Map<City,List<PlaceList>> =
+        val placeDate: Map<City,List<PlaceList>> =
              Datasource().loadPlaceLists().groupBy{it.city}
         _uiState.value=UiState(
-            placedate=placedate
+            placeDate=placeDate,
+
         )
     }
 
+    fun resetHomeScreenStates() {
+        _uiState.update {
+            it.copy(
+                isShowingPlaceList = true
+            )
+        }
+    }
+
+    fun detailsScreenStates(placeList: PlaceList) {
+        _uiState.update {
+            it.copy(
+                currentSelectedPlace = placeList,
+                isShowingPlaceList = false
+            )
+        }
+    }
 
 }
