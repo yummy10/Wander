@@ -6,7 +6,8 @@
     <string name="expand_button_content_description">expand_button_content_description</string>
     <string name="about">About:</string>
 
-
+    <string name="hong_kong">Hong Kong</string>
+    <string name="beijing">Beijing</string>
 
     <string name="PlaceList1">I am strong.</string>
     <string name="PlaceList2">I believe in myself.</string>

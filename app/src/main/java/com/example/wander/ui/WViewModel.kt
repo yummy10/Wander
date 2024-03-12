@@ -49,4 +49,13 @@ class WViewModel: ViewModel() {
         }
     }
 
+    fun setCity(city: City){
+        _uiState.update {
+            it.copy(
+                currentPlace = city,
+                isShowingPlaceList = true,
+            )
+        }
+    }
+
 }

@@ -35,19 +35,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wander.R
 import com.example.wander.model.PlaceList
 import com.example.wander.model.UiState
 import com.example.wander.ui.components.WanderTopAppBar
-import com.example.wander.ui.theme.WanderTheme
 
 @Composable
-fun PalceApp(){
-    val wViewModel: WViewModel = viewModel()
+fun PalceApp(wViewModel: WViewModel ){
     val uiState by wViewModel.uiState.collectAsState()
 
     if (uiState.isShowingPlaceList) {
@@ -65,7 +61,7 @@ fun PalceApp(){
 @Composable
 fun PalceList(wViewModel: WViewModel,uiState: UiState, modifier: Modifier = Modifier){
 
-    val currentplacelist = uiState.currentplacelist
+    val currentplacelist = uiState.currentPlaceList
     Scaffold(
         topBar = {
             WanderTopAppBar()
@@ -168,10 +164,3 @@ fun PlaceIntro(
     }
 }
 
-@Preview
-@Composable
-private fun CardPreview() {
-    WanderTheme{
-        PalceApp()
-    }
-}

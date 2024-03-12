@@ -14,14 +14,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.wander.ui.CityApp
 import com.example.wander.ui.Greeting
-
+import com.example.wander.ui.PalceApp
 import com.example.wander.ui.WViewModel
-import com.example.wander.ui.palceApp
 
 enum class WanderScreen {
-    greeting,
-    selectlist
+    Greeting,
+    Citylist,
+    Selectlist
 }
 @Preview(showBackground = true)
 @Composable
@@ -31,20 +32,23 @@ fun WanderApp(
 ) {
     NavHost(
         navController = navController,
-        startDestination = WanderScreen.greeting.name,
+        startDestination = WanderScreen.Greeting.name,
         modifier = Modifier
     ) {
-        composable(route = WanderScreen.greeting.name) {
+        composable(route = WanderScreen.Greeting.name) {
             Greeting(message= stringResource(R.string.app_name),
-                continueButtonClicked = {navController.navigate(WanderScreen.selectlist.name)},
+                continueButtonClicked = {navController.navigate(WanderScreen.Citylist.name)},
                 modifier = Modifier.verticalScroll(rememberScrollState())//建立垂直捲軸,
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center
                     )
             )
         }
-        composable(route = WanderScreen.selectlist.name) {
-            palceApp()
+        composable(route = WanderScreen.Citylist.name) {
+            CityApp(continueButtonClicked = {navController.navigate(WanderScreen.Selectlist.name)},viewModel)
+        }
+        composable(route = WanderScreen.Selectlist.name) {
+            PalceApp(viewModel)
         }
     }
 

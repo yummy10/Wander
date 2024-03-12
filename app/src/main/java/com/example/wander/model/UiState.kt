@@ -12,5 +12,6 @@ data class UiState(
         R.string.place_description_1, R.drawable.image1,)
 )
 {
-    val currentplacelist: List<PlaceList> by lazy { placeDate[currentPlace]!! }
+    val currentPlaceList: List<PlaceList>
+        get() = placeDate[currentPlace] ?: listOf()
 }
