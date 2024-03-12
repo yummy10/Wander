@@ -33,7 +33,7 @@ import com.example.wander.ui.theme.WanderTheme
 
 
 @Composable
-fun Greeting(WViewModel: WViewModel = viewModel(),
+fun Greeting(WViewModel: WViewModel,
              message: String,
              continueButtonClicked: () -> Unit,
              modifier: Modifier = Modifier
@@ -100,7 +100,7 @@ fun Greetingview() {
     WanderTheme(
         //darkTheme = true
     ) {
-        Greeting(message=stringResource(R.string.app_name),
+        Greeting(WViewModel = viewModel(),message=stringResource(R.string.app_name),
             continueButtonClicked = {},
             modifier = Modifier.verticalScroll(rememberScrollState())//建立垂直捲軸,
                 .fillMaxSize()

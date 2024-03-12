@@ -36,19 +36,19 @@ fun WanderApp(
         modifier = Modifier
     ) {
         composable(route = WanderScreen.Greeting.name) {
-            Greeting(message= stringResource(R.string.app_name),
+            Greeting(viewModel,message= stringResource(R.string.app_name),
                 continueButtonClicked = {navController.navigate(WanderScreen.Citylist.name)},
                 modifier = Modifier.verticalScroll(rememberScrollState())//建立垂直捲軸,
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center
-                    )
+                    ),
             )
         }
         composable(route = WanderScreen.Citylist.name) {
-            CityApp(continueButtonClicked = {navController.navigate(WanderScreen.Selectlist.name)},viewModel)
+            CityApp(continueButtonClicked = {navController.navigate(WanderScreen.Selectlist.name)},backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},viewModel)
         }
         composable(route = WanderScreen.Selectlist.name) {
-            PalceApp(viewModel)
+            PalceApp(backButtonClicked = {navController.navigate(WanderScreen.Citylist.name)},viewModel)
         }
     }
 

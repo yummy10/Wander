@@ -43,11 +43,11 @@ import com.example.wander.model.UiState
 import com.example.wander.ui.components.WanderTopAppBar
 
 @Composable
-fun PalceApp(wViewModel: WViewModel ){
+fun PalceApp(backButtonClicked:() -> Unit,wViewModel: WViewModel){
     val uiState by wViewModel.uiState.collectAsState()
 
     if (uiState.isShowingPlaceList) {
-        PalceList(wViewModel,uiState)
+        PalceList(backButtonClicked,wViewModel,uiState)
     }else
     {
         PlaceDetail(wViewModel,uiState)
@@ -59,12 +59,12 @@ fun PalceApp(wViewModel: WViewModel ){
 
 //@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun PalceList(wViewModel: WViewModel,uiState: UiState, modifier: Modifier = Modifier){
+fun PalceList(backButtonClicked:() ->  Unit,wViewModel: WViewModel,uiState: UiState, modifier: Modifier = Modifier){
 
     val currentplacelist = uiState.currentPlaceList
     Scaffold(
         topBar = {
-            WanderTopAppBar()
+            WanderTopAppBar(backButtonClicked=backButtonClicked)
         }
     ){
         LazyColumn(contentPadding = it,modifier = modifier) {

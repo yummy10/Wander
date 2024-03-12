@@ -22,17 +22,17 @@ import com.example.wander.model.City
 import com.example.wander.ui.components.WanderTopAppBar
 
 @Composable
-fun CityApp(continueButtonClicked: () -> Unit,wViewModel: WViewModel ){
-    CityList(wViewModel,continueButtonClicked)
+fun CityApp(continueButtonClicked: () -> Unit,backButtonClicked:() -> Unit,wViewModel: WViewModel ){
+    CityList(backButtonClicked,wViewModel,continueButtonClicked)
 
 }
 
 @Composable
-fun CityList(wViewModel: WViewModel, continueButtonClicked: () -> Unit, modifier: Modifier = Modifier){
+fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, continueButtonClicked: () -> Unit, modifier: Modifier = Modifier){
 
     Scaffold(
         topBar = {
-            WanderTopAppBar()
+            WanderTopAppBar(backButtonClicked=backButtonClicked)
         }
     ){
         LazyColumn(contentPadding = it,modifier = modifier) {
