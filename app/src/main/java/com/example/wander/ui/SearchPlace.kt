@@ -1,96 +1,105 @@
 package com.example.wander.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.wander.R
 import com.example.wander.model.PlaceList
-import com.example.wander.model.UiState
 import com.example.wander.ui.components.WanderTopAppBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PalceApp(backButtonClicked:() -> Unit,navigateToAddPlaceScreen:() -> Unit,wViewModel: WViewModel){
-    val uiState by wViewModel.uiState.collectAsState()
-
-    if (uiState.isShowingPlaceList) {
-        PalceList(backButtonClicked,wViewModel,uiState,navigateToAddPlaceScreen)
-    }else
-    {
-        PlaceDetail(wViewModel,uiState)
-    }
-
-}
-
-
-
-@Composable
-fun PalceList(
+fun SearchPlaceScreen(
     backButtonClicked: () -> Unit,
-    wViewModel: WViewModel,
-    uiState: UiState,
-    navigateToAddPlaceScreen: () -> Unit,
-    modifier: Modifier = Modifier,
+    viewModel: WViewModel,
+//    onPlaceSelected: (PlaceList) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val currentplacelist = uiState.currentPlaceList
+    val search by viewModel.search.collectAsState()
     Scaffold(
         topBar = {
             WanderTopAppBar(backButtonClicked = backButtonClicked)
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = navigateToAddPlaceScreen,
-                modifier = Modifier.padding(16.dp),
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = stringResource(R.string.add_place),
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
+            TopAppBar(
+                title = { Text(stringResource(R.string.search_places)) },
+            )
         }
-    ) {
-        LazyColumn(contentPadding = it, modifier = modifier) {
-            items(currentplacelist) { place ->
-                PalceListCard(
-                    place = place,
-                    wViewModel = wViewModel,
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
+            OutlinedTextField(
+                value = search.searchQuery,
+                onValueChange = { viewModel.updateSearchQuery(it) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text(stringResource(R.string.search_places_hint)) },
+                singleLine = true,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null
+                    )
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (search.searchResults.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(search.searchResults) { place ->
+                        PalceListCard1(
+                            place = place,
+                            wViewModel = viewModel,
+                            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+                        )
+                    }
+                }
+            } else {
+                Text(
+                    text = stringResource(R.string.no_results_found),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.fillMaxSize(),
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -98,8 +107,8 @@ fun PalceList(
 }
 
 @Composable
-fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
+fun PalceListCard1(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = Modifier) {
+    val expanded by remember { mutableStateOf(false) }
     Card(modifier = modifier,) {
         Column(
             modifier=Modifier.animateContentSize(//已展開和未展開狀態之間的轉場效果
@@ -116,7 +125,7 @@ fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = M
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(194.dp)
-                    .clickable {wViewModel.detailsScreenStates(place)} ,
+                    .clickable { wViewModel.onPlaceSelected(place) } ,
                 contentScale = ContentScale.Crop
             )
             Row{
@@ -126,10 +135,6 @@ fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = M
                     style = MaterialTheme.typography.displayMedium
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                ItemButton(
-                    expanded = expanded,
-                    onClick = { expanded = !expanded}
-                )
             }
             if(expanded) {
                 PlaceIntro(
@@ -140,43 +145,3 @@ fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = M
         }
     }
 }
-
-
-
-@Composable
-private fun ItemButton(
-    expanded: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = if(expanded)Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
-            contentDescription = stringResource(R.string.expand_button_content_description),
-            tint = MaterialTheme.colorScheme.secondary
-        )
-    }
-}
-
-@Composable
-fun PlaceIntro(
-    @StringRes placeIntro: Int,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-    ) {
-        Text(
-            text = stringResource(R.string.about),
-            style = MaterialTheme.typography.labelSmall
-        )
-        Text(
-            text = stringResource(placeIntro),
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
-

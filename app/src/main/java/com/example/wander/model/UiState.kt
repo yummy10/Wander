@@ -9,7 +9,8 @@ data class UiState(
     val currentSelectedPlace: PlaceList = PlaceList(id = -1L,
         R.string.PlaceList1,
         R.string.place_description_1,
-        R.string.place_description_1, R.drawable.image1,)
+        R.string.place_description_1, R.drawable.image1,City.HongKong),
+
 )
 {
     val currentPlaceList: List<PlaceList>

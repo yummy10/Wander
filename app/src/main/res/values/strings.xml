@@ -84,6 +84,14 @@
         Mexico.\n\nTalk to you soon,\nAli</string>
     <string name="navigation_back">Back</string>
     <string name="back_button">backbutton</string>
+    <string name="add_place">add place</string>
+    <string name="place_name">Place Name</string>
+    <string name="place_description">Place Description</string>
+    <string name="place_body">Body</string>
+    <string name="place_city">Place City</string>
+    <string name="no_results_found">No Results Found :(</string>
+    <string name="search_places">Search Places</string>
+    <string name="search_places_hint">Search Places Hint</string>
 
 
 </resources>
