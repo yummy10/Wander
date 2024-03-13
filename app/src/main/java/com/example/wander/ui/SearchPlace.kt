@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -51,6 +52,7 @@ fun SearchPlaceScreen(
 //    onPlaceSelected: (PlaceList) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     val search by viewModel.search.collectAsState()
     Scaffold(
         topBar = {
@@ -59,7 +61,14 @@ fun SearchPlaceScreen(
                 title = { Text(stringResource(R.string.search_places)) },
             )
         }
-    ) { paddingValues ->
+    ) {
+        paddingValues ->
+        if (!uiState.isShowingPlaceList) {
+            PlaceDetail(viewModel,uiState)
+        }else
+        {
+
+
         Column(
             modifier = modifier
                 .padding(paddingValues)
@@ -82,18 +91,22 @@ fun SearchPlaceScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             if (search.searchResults.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-                    items(search.searchResults) { place ->
-                        PalceListCard1(
-                            place = place,
-                            wViewModel = viewModel,
-                            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
-                        )
+
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        items(search.searchResults) { place ->
+                            PalceListCard1(
+                                place = place,
+                                wViewModel = viewModel,
+                                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+                            )
+                        }
                     }
-                }
+
+
             } else {
                 Text(
                     text = stringResource(R.string.no_results_found),
@@ -103,12 +116,14 @@ fun SearchPlaceScreen(
                 )
             }
         }
+        }
     }
+
 }
 
 @Composable
 fun PalceListCard1(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = Modifier) {
-    val expanded by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
     Card(modifier = modifier,) {
         Column(
             modifier=Modifier.animateContentSize(//已展開和未展開狀態之間的轉場效果
@@ -125,7 +140,8 @@ fun PalceListCard1(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = 
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(194.dp)
-                    .clickable { wViewModel.onPlaceSelected(place) } ,
+                    .clickable { wViewModel.onPlaceSelected(place)
+                        wViewModel.detailsScreenStates(place)} ,
                 contentScale = ContentScale.Crop
             )
             Row{
@@ -135,6 +151,10 @@ fun PalceListCard1(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = 
                     style = MaterialTheme.typography.displayMedium
                 )
                 Spacer(modifier = Modifier.weight(1f))
+                ItemButton(
+                    expanded = expanded,
+                    onClick = { expanded = !expanded}
+                )
             }
             if(expanded) {
                 PlaceIntro(
@@ -145,3 +165,4 @@ fun PalceListCard1(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = 
         }
     }
 }
+

@@ -144,7 +144,7 @@ fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = M
 
 
 @Composable
-private fun ItemButton(
+fun ItemButton(
     expanded: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
