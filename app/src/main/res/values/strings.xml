@@ -95,6 +95,8 @@
     <string name="city_list">City</string>
     <string name="select">Select</string>
     <string name="search">Search</string>
+    <string name="loading">loading</string>
+    <string name="loading_failed">Failed to load\n</string>
 
 
 </resources>
