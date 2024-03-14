@@ -25,7 +25,7 @@ enum class WanderScreen {
     Citylist,
     Selectlist,
     Addplace,
-    Select,
+    Search,
 }
 
 @Composable
@@ -35,7 +35,7 @@ fun WanderApp(
 ) {
     NavHost(
         navController = navController,
-        startDestination = WanderScreen.Select.name,
+        startDestination = WanderScreen.Greeting.name,
         modifier = Modifier
     ) {
         composable(route = WanderScreen.Greeting.name) {
@@ -48,7 +48,7 @@ fun WanderApp(
             )
         }
         composable(route = WanderScreen.Citylist.name) {
-            CityApp(continueButtonClicked = {navController.navigate(WanderScreen.Selectlist.name)},backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},viewModel)
+            CityApp(continueButtonClicked = {navController.navigate(WanderScreen.Selectlist.name)},backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},navController,viewModel,)
         }
         composable(route = WanderScreen.Selectlist.name) {
             PalceApp(backButtonClicked = {navController.navigate(WanderScreen.Citylist.name)},navigateToAddPlaceScreen = {navController.navigate(WanderScreen.Addplace.name)},viewModel)
@@ -56,8 +56,8 @@ fun WanderApp(
         composable(route = WanderScreen.Addplace.name) {
             AddPlaceScreen(onBackPressed = {navController.navigate(WanderScreen.Citylist.name)},viewModel)
         }
-        composable(route = WanderScreen.Select.name) {
-            SearchPlaceScreen(backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},viewModel)
+        composable(route = WanderScreen.Search.name) {
+            SearchPlaceScreen(backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},navController,viewModel)
         }
 
     }

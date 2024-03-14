@@ -17,20 +17,25 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.wander.R
 import com.example.wander.model.City
+import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.components.WanderTopAppBar
 
 @Composable
-fun CityApp(continueButtonClicked: () -> Unit,backButtonClicked:() -> Unit,wViewModel: WViewModel ){
-    CityList(backButtonClicked,wViewModel,continueButtonClicked)
+fun CityApp(continueButtonClicked: () -> Unit, backButtonClicked:() -> Unit, navController: NavHostController, wViewModel: WViewModel ){
+    CityList(backButtonClicked,wViewModel,navController,continueButtonClicked)
 
 }
 
 @Composable
-fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, continueButtonClicked: () -> Unit, modifier: Modifier = Modifier){
+fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, navController: NavHostController,continueButtonClicked: () -> Unit, modifier: Modifier = Modifier){
 
     Scaffold(
+        bottomBar = {
+            WanderBottomNavigation(navController, wViewModel)
+        },
         topBar = {
             WanderTopAppBar(backButtonClicked=backButtonClicked)
         }

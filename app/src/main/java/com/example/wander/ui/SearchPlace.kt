@@ -40,14 +40,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.wander.R
 import com.example.wander.model.PlaceList
+import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.components.WanderTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchPlaceScreen(
     backButtonClicked: () -> Unit,
+    navController: NavHostController,
     viewModel: WViewModel,
 //    onPlaceSelected: (PlaceList) -> Unit,
     modifier: Modifier = Modifier
@@ -60,6 +63,9 @@ fun SearchPlaceScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.search_places)) },
             )
+        },
+        bottomBar = {
+            WanderBottomNavigation(navController, viewModel)
         }
     ) {
         paddingValues ->
