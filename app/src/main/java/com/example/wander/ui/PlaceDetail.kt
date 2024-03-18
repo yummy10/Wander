@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wander.R
-import com.example.wander.model.PlaceList
+import com.example.wander.model.Place
 import com.example.wander.model.UiState
 import com.example.wander.ui.theme.WanderTheme
 
@@ -55,7 +55,7 @@ fun PlaceDetail(wViewModel: WViewModel,uiState: UiState, modifier: Modifier = Mo
                         .padding(bottom = dimensionResource(R.dimen.padding_medium))
                 )
                 DetailsCard(
-                    PlaceList = uiState.currentSelectedPlace,
+                    Place = uiState.currentSelectedPlace,
                     modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
                 )
             }
@@ -90,7 +90,7 @@ private fun DetailsScreenTopBar(
                 .padding(end = dimensionResource(R.dimen.padding_medium))
         ) {
             Text(
-                text = stringResource(UiState.currentSelectedPlace.description),
+                text = UiState.currentSelectedPlace.placeDescription,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -100,7 +100,7 @@ private fun DetailsScreenTopBar(
 
 @Composable
 private fun DetailsCard(
-    PlaceList: PlaceList,
+    Place: Place,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -113,7 +113,7 @@ private fun DetailsCard(
                 .padding(dimensionResource(R.dimen.padding_small))
         ) {
             Text(
-                text = stringResource(PlaceList.body),
+                text = Place.placeIntroduction,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

@@ -1,13 +1,7 @@
 package com.example.wander.ui
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,21 +21,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.wander.R
-import com.example.wander.model.PlaceList
 import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.components.WanderTopAppBar
 
@@ -52,11 +37,10 @@ fun SearchPlaceScreen(
     backButtonClicked: () -> Unit,
     navController: NavHostController,
     viewModel: WViewModel,
-//    onPlaceSelected: (PlaceList) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val search by viewModel.search.collectAsState()
+    val places by viewModel.places.collectAsState()
     Scaffold(
         topBar = {
             WanderTopAppBar(backButtonClicked = backButtonClicked)
@@ -81,8 +65,8 @@ fun SearchPlaceScreen(
                 .padding(16.dp)
         ) {
             OutlinedTextField(
-                value = search.searchQuery,
-                onValueChange = { viewModel.updateSearchQuery(it) },
+                value = uiState.search,
+                onValueChange = { viewModel.getSearchPlaces(city = "", name = uiState.search) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(stringResource(R.string.search_places_hint)) },
                 singleLine = true,
@@ -96,15 +80,13 @@ fun SearchPlaceScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (search.searchResults.isNotEmpty()) {
-
-
+            if (places.isNotEmpty()) {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
-                        items(search.searchResults) { place ->
-                            PalceListCard1(
+                        items(places) { place ->
+                            PalceListCard(
                                 place = place,
                                 wViewModel = viewModel,
                                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
@@ -125,50 +107,5 @@ fun SearchPlaceScreen(
         }
     }
 
-}
-
-@Composable
-fun PalceListCard1(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
-    Card(modifier = modifier,) {
-        Column(
-            modifier=Modifier.animateContentSize(//已展開和未展開狀態之間的轉場效果
-                animationSpec = spring<IntSize>(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessMedium
-                )
-            )
-        ) {
-            Image(
-
-                painter = painterResource(place.imageResourceId),
-                contentDescription =stringResource(place.stringResourceId) ,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(194.dp)
-                    .clickable { wViewModel.onPlaceSelected(place)
-                        wViewModel.detailsScreenStates(place)} ,
-                contentScale = ContentScale.Crop
-            )
-            Row{
-                Text(
-                    text = LocalContext.current.getString(place.stringResourceId),
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)),
-                    style = MaterialTheme.typography.displayMedium
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                ItemButton(
-                    expanded = expanded,
-                    onClick = { expanded = !expanded}
-                )
-            }
-            if(expanded) {
-                PlaceIntro(
-                    placeIntro = place.description,
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
-                )
-            }
-        }
-    }
 }
 

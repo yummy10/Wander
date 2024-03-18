@@ -11,13 +11,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.wander.R
 import com.example.wander.model.City
 import com.example.wander.ui.components.WanderBottomNavigation
@@ -31,6 +32,7 @@ fun CityApp(continueButtonClicked: () -> Unit, backButtonClicked:() -> Unit, nav
 
 @Composable
 fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, navController: NavHostController,continueButtonClicked: () -> Unit, modifier: Modifier = Modifier){
+    val cities by wViewModel.cities.collectAsState(initial = emptyList())
 
     Scaffold(
         bottomBar = {
@@ -41,7 +43,7 @@ fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, navController:
         }
     ){
         LazyColumn(contentPadding = it,modifier = modifier) {
-            items(City.entries) { place->
+            items(cities) { place->
                 CityItem(place,continueButtonClicked,wViewModel)
             }
         }
@@ -53,19 +55,22 @@ fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, navController:
 fun CityItem(city: City,continueButtonClicked: () -> Unit,wViewModel:WViewModel) {
     Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))) {
         Image(
-            painter = painterResource(id = city.imageResourceId),
-            contentDescription = stringResource(id = city.stringResourceId),
+            painter = rememberAsyncImagePainter(model = city.imageUrl),
+            contentDescription = city.cityName,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(194.dp)
-                .clickable {ToSelctList(city,wViewModel)
-                    continueButtonClicked()},
+                .clickable {
+                    ToSelectList(city, wViewModel)
+                    continueButtonClicked()
+                },
             contentScale = ContentScale.Crop
         )
-        Text(text = city.name)
+        Text(text = city.cityName)
     }
 }
 
-fun ToSelctList(city: City,wViewModel:WViewModel){
-    wViewModel.setCity(city)
+
+fun ToSelectList(city: City,wViewModel:WViewModel){
+    wViewModel.setCity(city.cityName)
 }

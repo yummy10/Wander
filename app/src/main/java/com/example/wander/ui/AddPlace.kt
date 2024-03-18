@@ -27,7 +27,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.wander.R
-import com.example.wander.model.PlaceList
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,7 +71,7 @@ fun AddPlaceScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
             TextField(
-                value = stringResource(city.stringResourceId),
+                value = city,
                 onValueChange = { },
                 enabled = false, // 禁用编辑
                 modifier = Modifier.fillMaxWidth(),
@@ -117,14 +116,14 @@ fun AddPlaceScreen(
 
             Button(
                 onClick = {
-                    val newPlace = PlaceList(
-                        id = System.currentTimeMillis(),
-                        stringResourceId = R.string.app_name, // Replace with a proper string resource
-                        description = R.string.app_name, // Replace with a proper string resource
-                        body = R.string.app_name, // Replace with a proper string resource
-                        imageResourceId = R.drawable.ic_launcher_background, // Replace with a proper image resource
-                        city = city
-                    )
+//                    val newPlace = Place(
+//                        id = System.currentTimeMillis(),
+//                        stringResourceId = R.string.app_name, // Replace with a proper string resource
+//                        description = R.string.app_name, // Replace with a proper string resource
+//                        body = R.string.app_name, // Replace with a proper string resource
+//                        imageResourceId = R.drawable.ic_launcher_background, // Replace with a proper image resource
+//                        city = city
+//                    )
     //                onPlaceAdded(newPlace)
                 },
                 modifier = Modifier.fillMaxWidth()

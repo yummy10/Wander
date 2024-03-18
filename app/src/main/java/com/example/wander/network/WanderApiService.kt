@@ -1,25 +1,35 @@
 package com.example.wander.network
+import com.example.wander.model.City
+import com.example.wander.model.Place
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 private const val BASE_URL =
-    "https://android-kotlin-fun-mars-server.appspot.com"
+    "http://localhost:80/api"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL)
     .build()
 
-interface MarsApiService {
-    @GET("photos")
-    suspend fun getPhotos(): List<Data>
+interface WanderApiService {
+    @GET("cities")
+    suspend fun getAllCities(): List<City>
+    @GET("places")
+    suspend fun getAllPlaces(): List<Place>
+    @GET("places/search")
+    suspend fun getAllSearchPlaces(
+        @Query("name") name: String? = null,
+        @Query("city") city: String? = null
+    ): List<Place>
 }
 
-object MarsApi {
-    val retrofitService : MarsApiService by lazy {
-        retrofit.create(MarsApiService::class.java)
+object WanderApi {
+    val retrofitService : WanderApiService by lazy {
+        retrofit.create(WanderApiService::class.java)
     }
 }

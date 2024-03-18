@@ -1,6 +1,5 @@
 package com.example.wander.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -32,14 +31,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.wander.R
-import com.example.wander.model.PlaceList
+import com.example.wander.model.Place
 import com.example.wander.model.UiState
 import com.example.wander.ui.components.WanderTopAppBar
 
@@ -66,7 +64,8 @@ fun PalceList(
     navigateToAddPlaceScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val currentplacelist = uiState.currentPlaceList
+    wViewModel.getSearchPlaces(city = uiState.currentPlace, name = "")
+    val currentplacelist by wViewModel.places.collectAsState(initial = emptyList())
     Scaffold(
         topBar = {
             WanderTopAppBar(backButtonClicked = backButtonClicked)
@@ -98,12 +97,12 @@ fun PalceList(
 }
 
 @Composable
-fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = Modifier) {
+fun PalceListCard(wViewModel: WViewModel,place:Place, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     Card(modifier = modifier,) {
         Column(
             modifier=Modifier.animateContentSize(//已展開和未展開狀態之間的轉場效果
-                animationSpec = spring<IntSize>(
+                animationSpec = spring(
                     dampingRatio = Spring.DampingRatioNoBouncy,
                     stiffness = Spring.StiffnessMedium
                 )
@@ -111,8 +110,8 @@ fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = M
         ) {
             Image(
 
-                painter = painterResource(place.imageResourceId),
-                contentDescription =stringResource(place.stringResourceId) ,
+                painter = rememberAsyncImagePainter(model = place.placeImagePath),
+                contentDescription =place.placeImageName ,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(194.dp)
@@ -121,7 +120,7 @@ fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = M
             )
             Row{
                 Text(
-                    text = LocalContext.current.getString(place.stringResourceId),
+                    text = place.placeName,
                     modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)),
                     style = MaterialTheme.typography.displayMedium
                 )
@@ -133,7 +132,7 @@ fun PalceListCard(wViewModel: WViewModel,place:PlaceList, modifier: Modifier = M
             }
             if(expanded) {
                 PlaceIntro(
-                    placeIntro = place.description,
+                    placeIntro = place.placeDescription,
                     modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
                 )
             }
@@ -163,7 +162,7 @@ fun ItemButton(
 
 @Composable
 fun PlaceIntro(
-    @StringRes placeIntro: Int,
+    placeIntro: String,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -174,7 +173,7 @@ fun PlaceIntro(
             style = MaterialTheme.typography.labelSmall
         )
         Text(
-            text = stringResource(placeIntro),
+            text = placeIntro,
             style = MaterialTheme.typography.bodyLarge
         )
     }
