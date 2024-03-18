@@ -21,7 +21,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.wander.R
 import com.example.wander.WanderScreen
-import com.example.wander.ui.WViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +52,6 @@ fun WanderTopAppBar(modifier: Modifier = Modifier,backButtonClicked:() -> Unit) 
 @Composable
 fun WanderBottomNavigation(
     navController: NavHostController,
-    viewModel: WViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route

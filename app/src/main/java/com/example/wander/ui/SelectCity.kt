@@ -36,7 +36,7 @@ fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, navController:
 
     Scaffold(
         bottomBar = {
-            WanderBottomNavigation(navController, wViewModel)
+            WanderBottomNavigation(navController)
         },
         topBar = {
             WanderTopAppBar(backButtonClicked=backButtonClicked)

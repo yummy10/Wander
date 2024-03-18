@@ -49,7 +49,7 @@ fun SearchPlaceScreen(
             )
         },
         bottomBar = {
-            WanderBottomNavigation(navController, viewModel)
+            WanderBottomNavigation(navController,)
         }
     ) {
         paddingValues ->
