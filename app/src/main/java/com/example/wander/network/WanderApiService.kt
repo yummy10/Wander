@@ -9,7 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 private const val BASE_URL =
-    "http://localhost:80/api"
+    "http://localhost:80/api/"
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))

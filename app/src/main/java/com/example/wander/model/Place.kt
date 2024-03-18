@@ -1,5 +1,8 @@
 package com.example.wander.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Place(
     val placeId: Int,
     val placeName: String,

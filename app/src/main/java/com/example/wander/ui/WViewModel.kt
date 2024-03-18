@@ -77,26 +77,6 @@ class WViewModel() : ViewModel() {
         }
     }
 
-//    fun updateSearchQuery(query: String) {
-//        _search.update { currentSearch ->
-//            val searchResults = if (query.isBlank()) {
-//                currentSearch.allList
-//            } else {
-//                currentSearch.allList.filter {
-//                    it.stringResourceId.toString().contains(query, ignoreCase = true)
-//                }
-//            }
-//            currentSearch.copy(searchQuery = query, searchResults = searchResults)
-//        }
-//    }
-//    fun onPlaceSelected(placeList: Place) {
-//        _uiState.update {
-//            it.copy(
-//                currentSelectedPlace = placeList,
-//                isShowingPlaceList = false
-//            )
-//        }
-//    }
     fun getPlaces() {
         viewModelScope.launch {
             netsUiState = NetsUiState.Loading
