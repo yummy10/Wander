@@ -12,3 +12,8 @@ data class Place(
     val placeImageName: String,
     val placeImagePath: String
 )
+@Serializable
+data class PlaceRequest(
+    val place: Place,
+    val placeName: String
+)

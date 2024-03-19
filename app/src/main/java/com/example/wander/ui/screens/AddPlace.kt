@@ -40,7 +40,6 @@ fun AddPlaceScreen(
 ) {
     val currentCityName = wViewModel.uiState.value.currentPlace
     val currentCityId = wViewModel.uiState.value.currentId
-
     var placeName by remember { mutableStateOf("") }
     var placeDescription by remember { mutableStateOf("") }
     var placeBody by remember { mutableStateOf("") }
@@ -98,7 +97,6 @@ fun AddPlaceScreen(
                 maxLines = Int.MAX_VALUE,
                 singleLine = false
             )
-
             Button(
                 onClick = {
                     val newPlace = Place(
@@ -110,8 +108,8 @@ fun AddPlaceScreen(
                         placeImageName = "", // You may need to set this value
                         placeImagePath = "" // You may need to set this value
                     )
-                    wViewModel.addPlace(newPlace)
-                    // Reset the input fields after adding the place
+                    wViewModel.addPlace(newPlace,currentCityName)
+
                     placeName = ""
                     placeDescription = ""
                     placeBody = ""
@@ -123,3 +121,4 @@ fun AddPlaceScreen(
         }
     }
 }
+

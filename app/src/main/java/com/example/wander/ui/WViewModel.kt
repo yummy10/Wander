@@ -140,12 +140,12 @@ class WViewModel() : ViewModel() {
         }
     }
 
-    fun addPlace(newPlace: Place) {
+    fun addPlace(newPlace: Place,placeName:String) {
         viewModelScope.launch {
             netsUiState = NetsUiState.Loading
             netsUiState = try {
                     val repository = NetworkPlacesRepository()
-                    repository.addPlace(newPlace)
+                    repository.addPlace(newPlace,placeName)
                 NetsUiState.Success(
                     "Success: "
                 )
