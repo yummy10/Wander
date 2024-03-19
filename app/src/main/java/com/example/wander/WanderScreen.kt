@@ -13,12 +13,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.wander.ui.AddPlaceScreen
-import com.example.wander.ui.CityApp
-import com.example.wander.ui.Greeting
-import com.example.wander.ui.PalceApp
-import com.example.wander.ui.SearchPlaceScreen
 import com.example.wander.ui.WViewModel
+import com.example.wander.ui.screens.AddPlaceScreen
+import com.example.wander.ui.screens.CityApp
+import com.example.wander.ui.screens.Greeting
+import com.example.wander.ui.screens.PlaceApp
+import com.example.wander.ui.screens.SearchPlaceScreen
 
 enum class WanderScreen {
     Greeting,
@@ -51,7 +51,7 @@ fun WanderApp(
             CityApp(continueButtonClicked = {navController.navigate(WanderScreen.Selectlist.name)},backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},navController,viewModel,)
         }
         composable(route = WanderScreen.Selectlist.name) {
-            PalceApp(backButtonClicked = {navController.navigate(WanderScreen.Citylist.name)},navigateToAddPlaceScreen = {navController.navigate(WanderScreen.Addplace.name)},viewModel)
+            PlaceApp(backButtonClicked = {navController.navigate(WanderScreen.Citylist.name)},navigateToAddPlaceScreen = {navController.navigate(WanderScreen.Addplace.name)},viewModel)
         }
         composable(route = WanderScreen.Addplace.name) {
             AddPlaceScreen(onBackPressed = {navController.navigate(WanderScreen.Citylist.name)},viewModel)

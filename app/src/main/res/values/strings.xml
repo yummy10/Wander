@@ -5,83 +5,6 @@
     <string name="user_name">Enter your name</string>
     <string name="expand_button_content_description">expand_button_content_description</string>
     <string name="about">About:</string>
-
-    <string name="hong_kong">Hong Kong</string>
-    <string name="beijing">Beijing</string>
-
-    <string name="PlaceList1">I am strong.</string>
-    <string name="PlaceList2">I believe in myself.</string>
-    <string name="PlaceList3">Each day</string>
-    <string name="PlaceList4">Every challenge .</string>
-    <string name="PlaceList5">I have so much to be grateful for.</string>
-    <string name="PlaceList6">Good things are always coming into my life.</string>
-    <string name="PlaceList7">New opportunities await me at every turn.</string>
-    <string name="PlaceList8">I have the courage to follow my heart.</string>
-    <string name="PlaceList9">Things will unfold at precisely the right time.</string>
-    <string name="PlaceList10">I will be present in all the moments that this day brings.</string>
-
-    <string name="place_description_1">Eating treats on the terrace</string>
-    <string name="place_description_2">Barking at Daddy</string>
-    <string name="place_description_3">Stealing socks</string>
-    <string name="place_description_4">Meeting new animals</string>
-    <string name="place_description_5">Digging in the garden</string>
-    <string name="place_description_6">Chasing sea foam</string>
-    <string name="place_description_7">Bothering her paw-rents</string>
-    <string name="place_description_8">Sunbathing</string>
-    <string name="place_description_9">Sleeping in dangerous places</string>
-    <string name="place_description_10">Sleeping in dangerous places</string>
-
-    <string name="body_1">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-
-    <string name="body_2">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-    <string name="body_3">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-    <string name="body_4">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-    <string name="body_5">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-    <string name="body_6">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-    <string name="body_7">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-    <string name="body_8">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-    <string name="body_9">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
-    <string name="body_10">I\'ll be in your neighborhood doing errands and was hoping to catch you for a coffee this
-        Saturday. If you don\'t have anything scheduled, it would be great to see you! It feels like
-        its been forever.\n\nIf we do get a chance to get together, remind me to tell you about Kim.
-        She stopped over at the house to say hey to the kids and told me all about her trip to
-        Mexico.\n\nTalk to you soon,\nAli</string>
     <string name="navigation_back">Back</string>
     <string name="back_button">backbutton</string>
     <string name="add_place">add place</string>
@@ -91,7 +14,7 @@
     <string name="place_city">Place City</string>
     <string name="no_results_found">No Results Found :(</string>
     <string name="search_places">Search Places</string>
-    <string name="search_places_hint">Search Places Hint</string>
+    <string name="search_places_hint">Search Places</string>
     <string name="city_list">City</string>
     <string name="select">Select</string>
     <string name="search">Search</string>

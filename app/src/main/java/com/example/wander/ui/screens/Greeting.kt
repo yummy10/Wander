@@ -1,4 +1,4 @@
-package com.example.wander.ui
+package com.example.wander.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wander.R
+import com.example.wander.ui.WViewModel
 import com.example.wander.ui.theme.WanderTheme
 
 

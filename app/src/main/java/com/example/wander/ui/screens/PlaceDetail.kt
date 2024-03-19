@@ -1,4 +1,4 @@
-package com.example.wander.ui
+package com.example.wander.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -31,10 +31,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wander.R
 import com.example.wander.model.Place
 import com.example.wander.model.UiState
+import com.example.wander.ui.WViewModel
 import com.example.wander.ui.theme.WanderTheme
 
 @Composable
-fun PlaceDetail(wViewModel: WViewModel,uiState: UiState, modifier: Modifier = Modifier){
+fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = Modifier){
     val onBackPressed = {wViewModel.resetHomeScreenStates()}
     BackHandler {
         onBackPressed()

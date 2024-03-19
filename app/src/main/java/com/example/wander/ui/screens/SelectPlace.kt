@@ -1,4 +1,4 @@
-package com.example.wander.ui
+package com.example.wander.ui.screens
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -38,38 +38,40 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.wander.R
 import com.example.wander.model.Place
-import com.example.wander.model.UiState
+import com.example.wander.network.BASE_URL
+import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.WanderTopAppBar
 
 @Composable
-fun PalceApp(backButtonClicked:() -> Unit,navigateToAddPlaceScreen:() -> Unit,wViewModel: WViewModel){
+fun PlaceApp(
+    backButtonClicked: () -> Unit,
+    navigateToAddPlaceScreen: () -> Unit,
+    wViewModel: WViewModel
+) {
     val uiState by wViewModel.uiState.collectAsState()
 
     if (uiState.isShowingPlaceList) {
-        PalceList(backButtonClicked,wViewModel,uiState,navigateToAddPlaceScreen)
-    }else
-    {
-        PlaceDetail(wViewModel,uiState)
+        PlaceList(
+            backButtonClicked = backButtonClicked,
+            wViewModel = wViewModel,
+            navigateToAddPlaceScreen = navigateToAddPlaceScreen
+        )
+    } else {
+        PlaceDetail(wViewModel = wViewModel, uiState = uiState)
     }
-
 }
 
-
-
 @Composable
-fun PalceList(
+fun PlaceList(
     backButtonClicked: () -> Unit,
     wViewModel: WViewModel,
-    uiState: UiState,
     navigateToAddPlaceScreen: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
-    wViewModel.getSearchPlaces(city = uiState.currentPlace, name = "")
-    val currentplacelist by wViewModel.places.collectAsState(initial = emptyList())
+    val currentPlaceList by wViewModel.places.collectAsState(initial = emptyList())
+
     Scaffold(
-        topBar = {
-            WanderTopAppBar(backButtonClicked = backButtonClicked)
-        },
+        topBar = { WanderTopAppBar(backButtonClicked = backButtonClicked) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = navigateToAddPlaceScreen,
@@ -83,10 +85,10 @@ fun PalceList(
                 )
             }
         }
-    ) {
-        LazyColumn(contentPadding = it, modifier = modifier) {
-            items(currentplacelist) { place ->
-                PalceListCard(
+    ) { paddingValues ->
+        LazyColumn(contentPadding = paddingValues, modifier = modifier) {
+            items(currentPlaceList) { place ->
+                PlaceListCard(
                     place = place,
                     wViewModel = wViewModel,
                     modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
@@ -97,11 +99,11 @@ fun PalceList(
 }
 
 @Composable
-fun PalceListCard(wViewModel: WViewModel,place:Place, modifier: Modifier = Modifier) {
+fun PlaceListCard(wViewModel: WViewModel, place: Place, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
-    Card(modifier = modifier,) {
+    Card(modifier = modifier) {
         Column(
-            modifier=Modifier.animateContentSize(//已展開和未展開狀態之間的轉場效果
+            modifier = Modifier.animateContentSize(
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioNoBouncy,
                     stiffness = Spring.StiffnessMedium
@@ -109,28 +111,24 @@ fun PalceListCard(wViewModel: WViewModel,place:Place, modifier: Modifier = Modif
             )
         ) {
             Image(
-
-                painter = rememberAsyncImagePainter(model = place.placeImagePath),
-                contentDescription =place.placeImageName ,
+                painter = rememberAsyncImagePainter(model = "$BASE_URL${place.placeImagePath}"),
+                contentDescription = place.placeImageName,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(194.dp)
-                    .clickable {wViewModel.detailsScreenStates(place)} ,
+                    .clickable { wViewModel.detailsScreenStates(place) },
                 contentScale = ContentScale.Crop
             )
-            Row{
+            Row {
                 Text(
                     text = place.placeName,
                     modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)),
                     style = MaterialTheme.typography.displayMedium
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                ItemButton(
-                    expanded = expanded,
-                    onClick = { expanded = !expanded}
-                )
+                ItemButton(expanded = expanded, onClick = { expanded = !expanded })
             }
-            if(expanded) {
+            if (expanded) {
                 PlaceIntro(
                     placeIntro = place.placeDescription,
                     modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
@@ -140,10 +138,8 @@ fun PalceListCard(wViewModel: WViewModel,place:Place, modifier: Modifier = Modif
     }
 }
 
-
-
 @Composable
-fun ItemButton(
+private fun ItemButton(
     expanded: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -153,7 +149,7 @@ fun ItemButton(
         modifier = modifier
     ) {
         Icon(
-            imageVector = if(expanded)Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
+            imageVector = if (expanded) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
             contentDescription = stringResource(R.string.expand_button_content_description),
             tint = MaterialTheme.colorScheme.secondary
         )
@@ -161,13 +157,11 @@ fun ItemButton(
 }
 
 @Composable
-fun PlaceIntro(
+private fun PlaceIntro(
     placeIntro: String,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.about),
             style = MaterialTheme.typography.labelSmall

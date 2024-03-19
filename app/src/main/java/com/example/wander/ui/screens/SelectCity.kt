@@ -1,4 +1,4 @@
-package com.example.wander.ui
+package com.example.wander.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,17 +21,19 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.wander.R
 import com.example.wander.model.City
+import com.example.wander.network.BASE_URL
+import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.components.WanderTopAppBar
 
 @Composable
-fun CityApp(continueButtonClicked: () -> Unit, backButtonClicked:() -> Unit, navController: NavHostController, wViewModel: WViewModel ){
+fun CityApp(continueButtonClicked: () -> Unit, backButtonClicked:() -> Unit, navController: NavHostController, wViewModel: WViewModel){
     CityList(backButtonClicked,wViewModel,navController,continueButtonClicked)
 
 }
 
 @Composable
-fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, navController: NavHostController,continueButtonClicked: () -> Unit, modifier: Modifier = Modifier){
+fun CityList(backButtonClicked:() -> Unit, wViewModel: WViewModel, navController: NavHostController, continueButtonClicked: () -> Unit, modifier: Modifier = Modifier){
     val cities by wViewModel.cities.collectAsState(initial = emptyList())
 
     Scaffold(
@@ -52,10 +54,10 @@ fun CityList(backButtonClicked:() -> Unit,wViewModel: WViewModel, navController:
 }
 
 @Composable
-fun CityItem(city: City,continueButtonClicked: () -> Unit,wViewModel:WViewModel) {
+fun CityItem(city: City,continueButtonClicked: () -> Unit,wViewModel: WViewModel) {
     Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))) {
         Image(
-            painter = rememberAsyncImagePainter(model = city.imageUrl),
+            painter = rememberAsyncImagePainter(model ="$BASE_URL${city.cityImagePath}"),
             contentDescription = city.cityName,
             modifier = Modifier
                 .fillMaxWidth()
@@ -71,6 +73,7 @@ fun CityItem(city: City,continueButtonClicked: () -> Unit,wViewModel:WViewModel)
 }
 
 
-fun ToSelectList(city: City,wViewModel:WViewModel){
-    wViewModel.setCity(city.cityName)
+fun ToSelectList(city: City,wViewModel: WViewModel){
+    wViewModel.getSearchPlaces(city=city.cityName, name =null)
+    wViewModel.setCity(city)
 }

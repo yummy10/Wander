@@ -1,4 +1,4 @@
-package com.example.wander.ui
+package com.example.wander.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.wander.R
+import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.components.WanderTopAppBar
 
@@ -41,6 +42,7 @@ fun SearchPlaceScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val places by viewModel.places.collectAsState()
+    viewModel.clearPlaces()
     Scaffold(
         topBar = {
             WanderTopAppBar(backButtonClicked = backButtonClicked)
@@ -66,7 +68,7 @@ fun SearchPlaceScreen(
         ) {
             OutlinedTextField(
                 value = uiState.search,
-                onValueChange = { viewModel.getSearchPlaces(city = "", name = uiState.search) },
+                onValueChange = { viewModel.getSearchPlaces(city = null, name = viewModel.updateSearch(it)) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(stringResource(R.string.search_places_hint)) },
                 singleLine = true,
@@ -86,7 +88,7 @@ fun SearchPlaceScreen(
                         contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
                         items(places) { place ->
-                            PalceListCard(
+                            PlaceListCard(
                                 place = place,
                                 wViewModel = viewModel,
                                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))

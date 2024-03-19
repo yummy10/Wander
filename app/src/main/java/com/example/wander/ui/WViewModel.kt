@@ -39,16 +39,14 @@ class WViewModel() : ViewModel() {
     val places: StateFlow<List<Place>> = _places
 
 
-    fun updateUsername(uname: String){
-        _name.value= Name(yourName=uname)
+    fun updateUsername(uname: String) {
+        _name.value = Name(yourName = uname)
     }
 
     init {
-        getPlaces()
+        clearPlaces()
         getCities()
     }
-
-
 
 
     fun resetHomeScreenStates() {
@@ -59,20 +57,11 @@ class WViewModel() : ViewModel() {
         }
     }
 
-    fun detailsScreenStates(placeList: Place) {
+    fun detailsScreenStates(place: Place) {
         _uiState.update {
             it.copy(
-                currentSelectedPlace = placeList,
+                currentSelectedPlace = place,
                 isShowingPlaceList = false
-            )
-        }
-    }
-
-    fun setCity(cityname: String){
-        _uiState.update {
-            it.copy(
-                currentPlace = cityname,
-                isShowingPlaceList = true,
             )
         }
     }
@@ -81,8 +70,8 @@ class WViewModel() : ViewModel() {
         viewModelScope.launch {
             netsUiState = NetsUiState.Loading
             netsUiState = try {
-                val repository  = NetworkPlacesRepository()
-                _places.value = repository .getPlaces()
+                val repository = NetworkPlacesRepository()
+                _places.value = repository.getPlaces()
                 NetsUiState.Success(
                     "Success:  "
                 )
@@ -98,8 +87,8 @@ class WViewModel() : ViewModel() {
         viewModelScope.launch {
             netsUiState = NetsUiState.Loading
             netsUiState = try {
-                val repository  = NetworkPlacesRepository()
-                _places.value = repository .getSearchPlaces(name, city)
+                val repository = NetworkPlacesRepository()
+                _places.value = repository.getSearchPlaces(name, city)
                 NetsUiState.Success(
                     "Success:  "
                 )
@@ -111,13 +100,16 @@ class WViewModel() : ViewModel() {
         }
     }
 
+    fun clearPlaces() {
+        _places.value = emptyList()
+    }
 
     fun getCities() {
         viewModelScope.launch {
             netsUiState = NetsUiState.Loading
             netsUiState = try {
-                val repository  = NetworkCitiesRepository()
-                _cities.value = repository .getCities()
+                val repository = NetworkCitiesRepository()
+                _cities.value = repository.getCities()
                 NetsUiState.Success(
                     "Success:  "
                 )
@@ -129,5 +121,40 @@ class WViewModel() : ViewModel() {
         }
     }
 
+    fun updateSearch(search: String):String {
+        _uiState.update {
+            it.copy(
+                search = search,
+            )
+        }
+        return search
+    }
 
+    fun setCity(city: City){
+        _uiState.update {
+            it.copy(
+                currentPlace = city.cityName,
+                currentId = city.cityId,
+                isShowingPlaceList = true,
+            )
+        }
+    }
+
+    fun addPlace(newPlace: Place) {
+        viewModelScope.launch {
+            netsUiState = NetsUiState.Loading
+            netsUiState = try {
+                    val repository = NetworkPlacesRepository()
+                    repository.addPlace(newPlace)
+                NetsUiState.Success(
+                    "Success: "
+                )
+                } catch (e: IOException) {
+                    NetsUiState.Error
+                } catch (e: HttpException) {
+                    NetsUiState.Error
+                }
+
+        }
+    }
 }

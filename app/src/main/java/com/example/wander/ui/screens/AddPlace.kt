@@ -1,4 +1,4 @@
-package com.example.wander.ui
+package com.example.wander.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -27,27 +27,23 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.wander.R
-
+import com.example.wander.model.Place
+import com.example.wander.ui.WViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AddPlaceScreen(
-   // onPlaceAdded: (PlaceList) -> Unit,
     onBackPressed: () -> Unit,
     wViewModel: WViewModel,
     modifier: Modifier = Modifier
 ) {
-    val city_name = wViewModel.uiState.value.currentPlace
-    var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var body by remember { mutableStateOf("") }
-   // var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val city by remember { mutableStateOf(city_name) }
-  //  val launcher = rememberLauncherForActivityResult(
- //       contract = ActivityResultContracts.GetContent(),
-   //     onResult = { uri -> imageUri = uri }
-   // )
+    val currentCityName = wViewModel.uiState.value.currentPlace
+    val currentCityId = wViewModel.uiState.value.currentId
+
+    var placeName by remember { mutableStateOf("") }
+    var placeDescription by remember { mutableStateOf("") }
+    var placeBody by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -71,60 +67,54 @@ fun AddPlaceScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
             TextField(
-                value = city,
-                onValueChange = { },
-                enabled = false, // 禁用编辑
+                value = currentCityName,
+                onValueChange = {},
+                enabled = false,
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.place_city)) }
+                label = { Text(currentCityName) }
             )
 
             OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
+                value = placeName,
+                onValueChange = { placeName = it },
                 label = { Text(stringResource(R.string.place_name)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
+                value = placeDescription,
+                onValueChange = { placeDescription = it },
                 label = { Text(stringResource(R.string.place_description)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
-                value = body,
-                onValueChange = { body = it },
+                value = placeBody,
+                onValueChange = { placeBody = it },
                 label = { Text(stringResource(R.string.place_body)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(250.dp), // 设置文本框的高度为250dp
-                maxLines = Int.MAX_VALUE, // 允许文本框显示多行文本
-                singleLine = false, // 禁用单行模式
-
+                    .height(250.dp),
+                maxLines = Int.MAX_VALUE,
+                singleLine = false
             )
-
-//            IconButton(
-//                onClick = { launcher.launch("image/*") },
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Icon(
-//                    painter = painterResource(R.drawable.ic_image),
-//                    contentDescription = stringResource(R.string.select_image)
-//                )
-//            }
 
             Button(
                 onClick = {
-//                    val newPlace = Place(
-//                        id = System.currentTimeMillis(),
-//                        stringResourceId = R.string.app_name, // Replace with a proper string resource
-//                        description = R.string.app_name, // Replace with a proper string resource
-//                        body = R.string.app_name, // Replace with a proper string resource
-//                        imageResourceId = R.drawable.ic_launcher_background, // Replace with a proper image resource
-//                        city = city
-//                    )
-    //                onPlaceAdded(newPlace)
+                    val newPlace = Place(
+                        placeId = 0, // You may need to generate a unique ID
+                        placeName = placeName,
+                        placeDescription = placeDescription,
+                        placeIntroduction = placeBody,
+                        cityId = currentCityId,
+                        placeImageName = "", // You may need to set this value
+                        placeImagePath = "" // You may need to set this value
+                    )
+                    wViewModel.addPlace(newPlace)
+                    // Reset the input fields after adding the place
+                    placeName = ""
+                    placeDescription = ""
+                    placeBody = ""
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
