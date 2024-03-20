@@ -20,6 +20,10 @@
     <string name="search">Search</string>
     <string name="loading">loading</string>
     <string name="loading_failed">Failed to load\n</string>
+    <string name="message_board">Message Board</string>
+    <string name="back">back</string>
+    <string name="likes">likes</string>
+    <string name="like">like</string>
 
 
 </resources>

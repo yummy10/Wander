@@ -34,13 +34,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.wander.R
 import com.example.wander.model.Place
 import com.example.wander.network.BASE_URL
+import com.example.wander.ui.NetsUiState
 import com.example.wander.ui.WViewModel
+import com.example.wander.ui.components.ErrorScreen
+import com.example.wander.ui.components.LoadingScreen
 import com.example.wander.ui.components.WanderTopAppBar
+import com.example.wander.ui.theme.WanderTheme
 
 @Composable
 fun PlaceApp(
@@ -49,16 +55,21 @@ fun PlaceApp(
     wViewModel: WViewModel
 ) {
     val uiState by wViewModel.uiState.collectAsState()
-
-    if (uiState.isShowingPlaceList) {
-        PlaceList(
-            backButtonClicked = backButtonClicked,
-            wViewModel = wViewModel,
-            navigateToAddPlaceScreen = navigateToAddPlaceScreen
-        )
-    } else {
-        PlaceDetail(wViewModel = wViewModel, uiState = uiState)
+    when (wViewModel.placenetsUiState) {
+        is NetsUiState.Loading -> LoadingScreen()
+        is NetsUiState.Success -> if (uiState.isShowingPlaceList) {
+            PlaceList(
+                backButtonClicked = backButtonClicked,
+                wViewModel = wViewModel,
+                navigateToAddPlaceScreen = navigateToAddPlaceScreen
+            )
+        } else {
+            PlaceDetail(wViewModel = wViewModel, uiState = uiState)
+        }
+        is NetsUiState.Error -> ErrorScreen()
     }
+
+
 }
 
 @Composable
@@ -173,3 +184,13 @@ private fun PlaceIntro(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun view() {
+    WanderTheme(
+        //darkTheme = true
+    ) {
+        PlaceApp(wViewModel = viewModel(),backButtonClicked={},navigateToAddPlaceScreen={})
+    }
+
+}

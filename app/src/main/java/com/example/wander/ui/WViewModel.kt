@@ -6,8 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wander.data.NetworkCitiesRepository
+import com.example.wander.data.NetworkMessagesRepository
 import com.example.wander.data.NetworkPlacesRepository
 import com.example.wander.model.City
+import com.example.wander.model.Message
 import com.example.wander.model.Name
 import com.example.wander.model.Place
 import com.example.wander.model.UiState
@@ -32,11 +34,17 @@ class WViewModel() : ViewModel() {
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var netsUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
         private set
+    var placenetsUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
+        private set
+    var messageBoardUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
+        private set
 
     private val _cities = MutableStateFlow<List<City>>(emptyList())
     val cities: StateFlow<List<City>> = _cities
     private val _places = MutableStateFlow<List<Place>>(emptyList())
     val places: StateFlow<List<Place>> = _places
+    private val _message = MutableStateFlow<List<Message>>(emptyList())
+    val message: StateFlow<List<Message>> = _message
 
 
     fun updateUsername(uname: String) {
@@ -66,27 +74,27 @@ class WViewModel() : ViewModel() {
         }
     }
 
-    fun getPlaces() {
-        viewModelScope.launch {
-            netsUiState = NetsUiState.Loading
-            netsUiState = try {
-                val repository = NetworkPlacesRepository()
-                _places.value = repository.getPlaces()
-                NetsUiState.Success(
-                    "Success:  "
-                )
-            } catch (e: IOException) {
-                NetsUiState.Error
-            } catch (e: HttpException) {
-                NetsUiState.Error
-            }
-        }
-    }
+//    fun getPlaces() {
+//        viewModelScope.launch {
+//            netsUiState = NetsUiState.Loading
+//            netsUiState = try {
+//                val repository = NetworkPlacesRepository()
+//                _places.value = repository.getPlaces()
+//                NetsUiState.Success(
+//                    "Success:  "
+//                )
+//            } catch (e: IOException) {
+//                NetsUiState.Error
+//            } catch (e: HttpException) {
+//                NetsUiState.Error
+//            }
+//        }
+//    }
 
     fun getSearchPlaces(name: String?, city: String?) {
         viewModelScope.launch {
-            netsUiState = NetsUiState.Loading
-            netsUiState = try {
+            placenetsUiState = NetsUiState.Loading
+            placenetsUiState = try {
                 val repository = NetworkPlacesRepository()
                 _places.value = repository.getSearchPlaces(name, city)
                 NetsUiState.Success(
@@ -142,8 +150,8 @@ class WViewModel() : ViewModel() {
 
     fun addPlace(newPlace: Place,placeName:String) {
         viewModelScope.launch {
-            netsUiState = NetsUiState.Loading
-            netsUiState = try {
+            placenetsUiState = NetsUiState.Loading
+            placenetsUiState = try {
                     val repository = NetworkPlacesRepository()
                     repository.addPlace(newPlace,placeName)
                 NetsUiState.Success(
@@ -157,4 +165,29 @@ class WViewModel() : ViewModel() {
 
         }
     }
+
+    fun getMessages() {
+        viewModelScope.launch {
+            netsUiState = NetsUiState.Loading
+            netsUiState = try {
+                val repository = NetworkMessagesRepository()
+                _message.value = repository.getMessages()
+                NetsUiState.Success(
+                    "Success:"
+                )
+            } catch (e: IOException) {
+                NetsUiState.Error
+            } catch (e: HttpException) {
+                NetsUiState.Error
+            }
+        }
+    }
+
+//    fun onLikeClicked(i: Int) {
+//        try {
+//            val repository = NetworkMessagesRepository()
+//            _message.value = repository.getMessages()
+//        }
+//    }
+
 }

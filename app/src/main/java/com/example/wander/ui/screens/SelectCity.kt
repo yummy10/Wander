@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,58 +24,90 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.wander.R
 import com.example.wander.model.City
 import com.example.wander.network.BASE_URL
+import com.example.wander.ui.NetsUiState
 import com.example.wander.ui.WViewModel
+import com.example.wander.ui.components.ErrorScreen
+import com.example.wander.ui.components.LoadingScreen
 import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.components.WanderTopAppBar
 
 @Composable
-fun CityApp(continueButtonClicked: () -> Unit, backButtonClicked:() -> Unit, navController: NavHostController, wViewModel: WViewModel){
-    CityList(backButtonClicked,wViewModel,navController,continueButtonClicked)
+fun CityApp(
+    continueButtonClicked: () -> Unit,
+    backButtonClicked: () -> Unit,
+    navController: NavHostController,
+    wViewModel: WViewModel
+) {
+    when (wViewModel.netsUiState) {
+        is NetsUiState.Loading -> LoadingScreen()
+        is NetsUiState.Success -> CityList(
+            backButtonClicked = backButtonClicked,
+            wViewModel = wViewModel,
+            navController = navController,
+            continueButtonClicked = continueButtonClicked
+        )
+        is NetsUiState.Error -> ErrorScreen()
+    }
 
 }
 
 @Composable
-fun CityList(backButtonClicked:() -> Unit, wViewModel: WViewModel, navController: NavHostController, continueButtonClicked: () -> Unit, modifier: Modifier = Modifier){
+fun CityList(
+    backButtonClicked: () -> Unit,
+    wViewModel: WViewModel,
+    navController: NavHostController,
+    continueButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val cities by wViewModel.cities.collectAsState(initial = emptyList())
 
     Scaffold(
-        bottomBar = {
-            WanderBottomNavigation(navController)
-        },
-        topBar = {
-            WanderTopAppBar(backButtonClicked=backButtonClicked)
-        }
-    ){
-        LazyColumn(contentPadding = it,modifier = modifier) {
-            items(cities) { place->
-                CityItem(place,continueButtonClicked,wViewModel)
+        bottomBar = { WanderBottomNavigation(navController) },
+        topBar = { WanderTopAppBar(backButtonClicked = backButtonClicked) }
+    ) {
+        LazyColumn(contentPadding = it, modifier = modifier) {
+            items(cities) { city ->
+                CityItem(
+                    city = city,
+                    continueButtonClicked = continueButtonClicked,
+                    wViewModel = wViewModel,
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+                )
             }
         }
     }
-
 }
 
 @Composable
-fun CityItem(city: City,continueButtonClicked: () -> Unit,wViewModel: WViewModel) {
-    Column(modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))) {
-        Image(
-            painter = rememberAsyncImagePainter(model ="$BASE_URL${city.cityImagePath}"),
-            contentDescription = city.cityName,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(194.dp)
-                .clickable {
-                    ToSelectList(city, wViewModel)
-                    continueButtonClicked()
-                },
-            contentScale = ContentScale.Crop
-        )
-        Text(text = city.cityName)
+fun CityItem(
+    city: City,
+    continueButtonClicked: () -> Unit,
+    wViewModel: WViewModel,
+    modifier: Modifier = Modifier
+) {
+    Card(modifier = modifier) {
+        Column() {
+            Image(
+                painter = rememberAsyncImagePainter(model = "$BASE_URL${city.cityImagePath}"),
+                contentDescription = city.cityName,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(194.dp)
+                    .clickable {
+                        ToSelectList(city, wViewModel)
+                        continueButtonClicked()
+                    },
+                contentScale = ContentScale.Crop
+            )
+            Text(text = city.cityName,
+                style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+            )
+        }
     }
 }
 
-
-fun ToSelectList(city: City,wViewModel: WViewModel){
-    wViewModel.getSearchPlaces(city=city.cityName, name =null)
+fun ToSelectList(city: City, wViewModel: WViewModel) {
+    wViewModel.getSearchPlaces(city = city.cityName, name = null)
     wViewModel.setCity(city)
 }
