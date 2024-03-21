@@ -14,9 +14,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.wander.ui.WViewModel
+import com.example.wander.ui.screens.AddComment
 import com.example.wander.ui.screens.AddPlaceScreen
 import com.example.wander.ui.screens.CityApp
 import com.example.wander.ui.screens.Greeting
+import com.example.wander.ui.screens.MessageBoardScreen
 import com.example.wander.ui.screens.PlaceApp
 import com.example.wander.ui.screens.SearchPlaceScreen
 
@@ -26,6 +28,8 @@ enum class WanderScreen {
     Selectlist,
     Addplace,
     Search,
+    Message,
+    Addmessage
 }
 
 @Composable
@@ -58,6 +62,12 @@ fun WanderApp(
         }
         composable(route = WanderScreen.Search.name) {
             SearchPlaceScreen(backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},navController,viewModel)
+        }
+        composable(route = WanderScreen.Message.name) {
+            MessageBoardScreen(viewModel,navController)
+        }
+        composable(route = WanderScreen.Addmessage.name) {
+            AddComment(onBackPressed = {navController.navigate(WanderScreen.Citylist.name)},viewModel)
         }
 
     }

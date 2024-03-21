@@ -1,6 +1,6 @@
 package com.example.wander.network
 import com.example.wander.model.City
-import com.example.wander.model.Message
+import com.example.wander.model.Comment
 import com.example.wander.model.Place
 import com.example.wander.model.PlaceRequest
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -12,6 +12,8 @@ import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 const val BASE_URL = "http://192.168.3.13:80/api/"
@@ -43,11 +45,17 @@ interface WanderApiService {
     ): List<Place>
 
     @GET("messages")
-    suspend fun getAllMessages(): List<Message>
+    suspend fun getAllMessages(): List<Comment>
 
     @POST("places")
     suspend fun addPlace(@Body placeRequest: PlaceRequest)
+    @POST("messages")
+    suspend fun addMessage(@Body comment: Comment)
 
+    @PUT("messages/{messageId}/like")
+    suspend fun addLike(@Path("messageId") messageId: Int)
+    @PUT("messages/{messageId}/sublike")
+    suspend fun subLike(@Path("messageId") messageId: Int)
 }
 
 object WanderApi {

@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,27 +26,22 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.wander.R
-import com.example.wander.model.Place
+import com.example.wander.model.Comment
 import com.example.wander.ui.WViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun AddPlaceScreen(
-    onBackPressed: () -> Unit,
-    wViewModel: WViewModel,
-    modifier: Modifier = Modifier
+fun AddComment(onBackPressed: () -> Unit,
+               wViewModel: WViewModel,
+               modifier: Modifier = Modifier
 ) {
-    val currentCityName = wViewModel.uiState.value.currentPlace
-    val currentCityId = wViewModel.uiState.value.currentId
     var placeName by remember { mutableStateOf("") }
-    var placeDescription by remember { mutableStateOf("") }
-    var placeBody by remember { mutableStateOf("") }
-
+    var text by remember { mutableStateOf("") }
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.add_place)) },
+                title = { Text(stringResource(R.string.add_comment)) },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
@@ -58,39 +52,23 @@ fun AddPlaceScreen(
                 }
             )
         }
-    ) { paddingValues ->
+    ){ paddingValues ->
         Column(
             modifier = modifier
                 .padding(paddingValues)
                 .padding(dimensionResource(R.dimen.padding_medium)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
-            TextField(
-                value = currentCityName,
-                onValueChange = {},
-                enabled = false,
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(currentCityName) }
-            )
-
             OutlinedTextField(
                 value = placeName,
-                onValueChange = { placeName = it },
-                label = { Text(stringResource(R.string.place_name)) },
-                modifier = Modifier.fillMaxWidth()
+                onValueChange = {placeName=it},
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(stringResource(R.string.place_name))}
             )
-
             OutlinedTextField(
-                value = placeDescription,
-                onValueChange = { placeDescription = it },
-                label = { Text(stringResource(R.string.place_description)) },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            OutlinedTextField(
-                value = placeBody,
-                onValueChange = { placeBody = it },
-                label = { Text(stringResource(R.string.place_body)) },
+                value = text,
+                onValueChange = {text=it},
+                label = { Text(stringResource(R.string.text))},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp),
@@ -99,26 +77,19 @@ fun AddPlaceScreen(
             )
             Button(
                 onClick = {
-                    val newPlace = Place(
-                        placeId = 0,
-                        placeName = placeName,
-                        placeDescription = placeDescription,
-                        placeIntroduction = placeBody,
-                        cityId = currentCityId,
-                        placeImageName = "",
-                        placeImagePath = ""
+                    val newComment = Comment(
+                        messageID= 0,
+                        userName="",
+                        placeName=placeName,
+                        text=text,
+                        mLike=0
                     )
-                    wViewModel.addPlace(newPlace,currentCityName)
-
-                    placeName = ""
-                    placeDescription = ""
-                    placeBody = ""
+                    wViewModel.addComment(newComment)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.add_place))
+                Text(stringResource(R.string.add_comment))
             }
         }
     }
 }
-

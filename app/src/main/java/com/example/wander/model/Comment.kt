@@ -3,7 +3,7 @@ package com.example.wander.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Message (
+data class Comment (
     val messageID: Int,
     val userName: String,
     val placeName: String,

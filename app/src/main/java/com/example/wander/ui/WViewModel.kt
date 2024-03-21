@@ -9,8 +9,7 @@ import com.example.wander.data.NetworkCitiesRepository
 import com.example.wander.data.NetworkMessagesRepository
 import com.example.wander.data.NetworkPlacesRepository
 import com.example.wander.model.City
-import com.example.wander.model.Message
-import com.example.wander.model.Name
+import com.example.wander.model.Comment
 import com.example.wander.model.Place
 import com.example.wander.model.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,15 +21,13 @@ import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface NetsUiState {
-    data class Success(val photos: String) : NetsUiState
+    data class Success(val a: String) : NetsUiState
     object Error : NetsUiState
     object Loading : NetsUiState
 }
 
 class WViewModel() : ViewModel() {
-    private val _name = MutableStateFlow(Name())
     private val _uiState = MutableStateFlow(UiState())
-    val name: StateFlow<Name> = _name.asStateFlow()
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var netsUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
         private set
@@ -43,12 +40,16 @@ class WViewModel() : ViewModel() {
     val cities: StateFlow<List<City>> = _cities
     private val _places = MutableStateFlow<List<Place>>(emptyList())
     val places: StateFlow<List<Place>> = _places
-    private val _message = MutableStateFlow<List<Message>>(emptyList())
-    val message: StateFlow<List<Message>> = _message
+    private val _comment = MutableStateFlow<List<Comment>>(emptyList())
+    val comment: StateFlow<List<Comment>> = _comment
 
 
     fun updateUsername(uname: String) {
-        _name.value = Name(yourName = uname)
+        _uiState.update {
+            it.copy(
+                userName = uname
+            )
+        }
     }
 
     init {
@@ -150,17 +151,10 @@ class WViewModel() : ViewModel() {
 
     fun addPlace(newPlace: Place,placeName:String) {
         viewModelScope.launch {
-            placenetsUiState = NetsUiState.Loading
-            placenetsUiState = try {
-                    val repository = NetworkPlacesRepository()
-                    repository.addPlace(newPlace,placeName)
-                NetsUiState.Success(
-                    "Success: "
-                )
+            try { val repository = NetworkPlacesRepository()
+                repository.addPlace(newPlace,placeName)
                 } catch (e: IOException) {
-                    NetsUiState.Error
                 } catch (e: HttpException) {
-                    NetsUiState.Error
                 }
 
         }
@@ -168,10 +162,10 @@ class WViewModel() : ViewModel() {
 
     fun getMessages() {
         viewModelScope.launch {
-            netsUiState = NetsUiState.Loading
-            netsUiState = try {
+            messageBoardUiState = NetsUiState.Success("")
+            messageBoardUiState = try {
                 val repository = NetworkMessagesRepository()
-                _message.value = repository.getMessages()
+                _comment.value = repository.getMessages()
                 NetsUiState.Success(
                     "Success:"
                 )
@@ -183,11 +177,36 @@ class WViewModel() : ViewModel() {
         }
     }
 
-//    fun onLikeClicked(i: Int) {
-//        try {
-//            val repository = NetworkMessagesRepository()
-//            _message.value = repository.getMessages()
-//        }
-//    }
+    fun onLikeClicked(i: Int,c:Boolean) {
+        viewModelScope.launch {
+            try {
+                val repository = NetworkMessagesRepository()
+                if(c){
+                    repository.subLike(i)
+                }else{
+                    repository.addLike(i)
+                }
+                getMessages()
+            } catch (e: IOException) {
+                NetsUiState.Error
+            } catch (e: HttpException) {
+                NetsUiState.Error
+            }
+        }
+   }
+
+    fun addComment(newComment: Comment) {
+        viewModelScope.launch {
+            try {
+                val repository = NetworkMessagesRepository()
+                repository.addMessage(newComment)
+            } catch (e: IOException) {
+
+            } catch (e: HttpException) {
+
+            }
+
+        }
+    }
 
 }

@@ -40,7 +40,7 @@ fun Greeting(WViewModel: WViewModel,
              modifier: Modifier = Modifier
 ) {
     val image = painterResource(R.drawable.world)
-    val name by WViewModel.name.collectAsState()
+    val uiState by WViewModel.uiState.collectAsState()
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,7 +63,7 @@ fun Greeting(WViewModel: WViewModel,
             color = Color.Blue
         )
         Spacer(modifier = Modifier.height(90.dp))
-        EditUserName(name.yourName, onValueChange = {WViewModel.updateUsername(it)}, modifier = Modifier)
+        EditUserName(uiState.userName, onValueChange = {WViewModel.updateUsername(it)}, modifier = Modifier)
         Button(onClick = {continueButtonClicked()}) {
             Text(
                 stringResource(R.string.continue_button),

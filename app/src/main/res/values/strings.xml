@@ -24,6 +24,10 @@
     <string name="back">back</string>
     <string name="likes">likes</string>
     <string name="like">like</string>
+    <string name="Chat">Chat</string>
+    <string name="add_message">Add Message</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="text">Commen</string>
 
 
 </resources>
