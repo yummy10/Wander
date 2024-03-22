@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.List
@@ -112,7 +113,20 @@ fun WanderBottomNavigation(
                 }
             }
         )
-
+        BottomNavigationItem(
+            icon = { Icon(Icons.Filled.AccountBox, contentDescription = null) },
+            label = { Text(stringResource(R.string.Account)) },
+            selected = currentRoute == WanderScreen.Account.name,
+            onClick = {
+                navController.navigate(WanderScreen.Account.name) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        )
     }
 }
 

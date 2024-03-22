@@ -3,11 +3,13 @@ import com.example.wander.model.City
 import com.example.wander.model.Comment
 import com.example.wander.model.Place
 import com.example.wander.model.PlaceRequest
+import com.example.wander.model.User
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -56,6 +58,12 @@ interface WanderApiService {
     suspend fun addLike(@Path("messageId") messageId: Int)
     @PUT("messages/{messageId}/sublike")
     suspend fun subLike(@Path("messageId") messageId: Int)
+    @GET("messages/{placeName}")
+    suspend fun isPlaceNameValid(@Path("placeName") placeName: String):Int
+    @POST("users/login")
+    suspend fun login(@Body user: User): Response<User>
+    @GET("messages/user/{userID}")
+    suspend fun showingUserComments(@Path("userID") userID: Int):List<Comment>
 }
 
 object WanderApi {

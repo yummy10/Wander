@@ -63,7 +63,7 @@ fun MessageBoardScreen(
 
         },
         bottomBar = {
-            WanderBottomNavigation(navController,)
+            WanderBottomNavigation(navController)
         },
         floatingActionButton = {
             FloatingActionButton(

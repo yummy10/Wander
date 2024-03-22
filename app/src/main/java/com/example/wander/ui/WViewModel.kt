@@ -12,6 +12,7 @@ import com.example.wander.model.City
 import com.example.wander.model.Comment
 import com.example.wander.model.Place
 import com.example.wander.model.UiState
+import com.example.wander.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,10 +45,10 @@ class WViewModel() : ViewModel() {
     val comment: StateFlow<List<Comment>> = _comment
 
 
-    fun updateUsername(uname: String) {
+    fun updateUsername(user: User?) {
         _uiState.update {
             it.copy(
-                userName = uname
+                user = user
             )
         }
     }
@@ -111,6 +112,10 @@ class WViewModel() : ViewModel() {
 
     fun clearPlaces() {
         _places.value = emptyList()
+    }
+
+    fun clearComments() {
+        _comment.value = emptyList()
     }
 
     fun getCities() {
@@ -196,10 +201,16 @@ class WViewModel() : ViewModel() {
    }
 
     fun addComment(newComment: Comment) {
+        newComment.userName= uiState.value.user?.userName ?:""
         viewModelScope.launch {
             try {
                 val repository = NetworkMessagesRepository()
-                repository.addMessage(newComment)
+                val isPlaceNameValid = repository.isPlaceNameValid(newComment.placeName)
+                _uiState.update { it.copy(isPlaceNameValid = isPlaceNameValid) }
+                if (isPlaceNameValid) {
+                    repository.addMessage(newComment)
+                    _uiState.update { it.copy(showSuccessDialog = true)}
+                    }
             } catch (e: IOException) {
 
             } catch (e: HttpException) {
@@ -208,5 +219,19 @@ class WViewModel() : ViewModel() {
 
         }
     }
+    fun dismissSuccessDialog() {
+        _uiState.update { it.copy(showSuccessDialog = false) } // 隐藏提示框
+    }
 
+    fun getUserComments() {
+        viewModelScope.launch {
+            try {
+                val repository = NetworkMessagesRepository()
+                _comment.value = repository.showingComments(uiState.value.user?.userID ?:0)
+                _uiState.update { it.copy(isShowingUserComments = true) }
+            } catch (e: IOException) {
+            } catch (e: HttpException) {
+            }
+        }
+    }
 }

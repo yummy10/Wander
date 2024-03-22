@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -15,8 +16,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,8 +39,28 @@ fun AddComment(onBackPressed: () -> Unit,
                wViewModel: WViewModel,
                modifier: Modifier = Modifier
 ) {
+    val uiState by wViewModel.uiState.collectAsState()
     var placeName by remember { mutableStateOf("") }
     var text by remember { mutableStateOf("") }
+    if (uiState.showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = { wViewModel.dismissSuccessDialog() },
+            title = { Text(stringResource(R.string.success_dialog_title)) },
+            text = { Text(stringResource(R.string.success_dialog_message)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        wViewModel.dismissSuccessDialog()
+                        placeName=""
+                        text=""
+                    }
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -63,7 +86,12 @@ fun AddComment(onBackPressed: () -> Unit,
                 value = placeName,
                 onValueChange = {placeName=it},
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.place_name))}
+                label = { Text(stringResource(R.string.place_name))},
+                supportingText = { // 显示支持文本
+                    if (!uiState.isPlaceNameValid) {
+                        Text(stringResource(R.string.place_name_not_found))
+                    }
+                }
             )
             OutlinedTextField(
                 value = text,

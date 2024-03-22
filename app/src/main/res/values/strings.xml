@@ -28,6 +28,13 @@
     <string name="add_message">Add Message</string>
     <string name="add_comment">Add Comment</string>
     <string name="text">Commen</string>
+    <string name="place_name_not_found">输入的地点名称不存在,请重新输入</string>
+    <string name="success_dialog_title">添加成功</string>
+    <string name="success_dialog_message">您的评论已成功添加</string>
+    <string name="ok">确定</string>
+    <string name="fail_title">登入失败</string>
+    <string name="fail_message">用户名称或密码错误</string>
+    <string name="Account">Account</string>
 
 
 </resources>

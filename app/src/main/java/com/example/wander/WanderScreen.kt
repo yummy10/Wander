@@ -14,10 +14,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.wander.ui.WViewModel
+import com.example.wander.ui.screens.AccountScreen
 import com.example.wander.ui.screens.AddComment
 import com.example.wander.ui.screens.AddPlaceScreen
 import com.example.wander.ui.screens.CityApp
 import com.example.wander.ui.screens.Greeting
+import com.example.wander.ui.screens.LoginScreen
 import com.example.wander.ui.screens.MessageBoardScreen
 import com.example.wander.ui.screens.PlaceApp
 import com.example.wander.ui.screens.SearchPlaceScreen
@@ -29,7 +31,9 @@ enum class WanderScreen {
     Addplace,
     Search,
     Message,
-    Addmessage
+    Addmessage,
+    Login,
+    Account
 }
 
 @Composable
@@ -44,7 +48,7 @@ fun WanderApp(
     ) {
         composable(route = WanderScreen.Greeting.name) {
             Greeting(viewModel,message= stringResource(R.string.app_name),
-                continueButtonClicked = {navController.navigate(WanderScreen.Citylist.name)},
+                continueButtonClicked = {navController.navigate(WanderScreen.Login.name)},
                 modifier = Modifier.verticalScroll(rememberScrollState())//建立垂直捲軸,
                     .fillMaxSize()
                     .wrapContentSize(Alignment.Center
@@ -68,6 +72,12 @@ fun WanderApp(
         }
         composable(route = WanderScreen.Addmessage.name) {
             AddComment(onBackPressed = {navController.navigate(WanderScreen.Citylist.name)},viewModel)
+        }
+        composable(route = WanderScreen.Login.name) {
+            LoginScreen(wViewModel=viewModel,onLoginSuccess={navController.navigate(WanderScreen.Citylist.name)})
+        }
+        composable(route = WanderScreen.Account.name) {
+            AccountScreen(wViewModel=viewModel,navController)
         }
 
     }

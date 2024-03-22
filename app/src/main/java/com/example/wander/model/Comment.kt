@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Comment (
     val messageID: Int,
-    val userName: String,
+    var userName: String,
     val placeName: String,
     val text: String,
     val mLike: Int,
