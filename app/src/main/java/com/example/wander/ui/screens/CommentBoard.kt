@@ -26,8 +26,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,7 +51,6 @@ fun MessageBoardScreen(
     viewModel: WViewModel,
     navController: NavHostController
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     viewModel.getMessages()
     Scaffold(
         topBar = {
