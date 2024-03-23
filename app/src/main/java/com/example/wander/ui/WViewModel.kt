@@ -27,7 +27,7 @@ sealed interface NetsUiState {
     object Loading : NetsUiState
 }
 
-class WViewModel() : ViewModel() {
+class WViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var netsUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
@@ -233,5 +233,14 @@ class WViewModel() : ViewModel() {
             } catch (e: HttpException) {
             }
         }
+    }
+
+    fun initAccountScreen() {
+        clearComments()
+        _uiState.update { it.copy(isShowingUserComments = false) }
+    }
+
+    fun onBackPressed() {
+        _uiState.update { it.copy(isShowingUserComments = false) }
     }
 }

@@ -1,11 +1,20 @@
 package com.example.wander.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,12 +39,26 @@ fun AccountScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    wViewModel.clearComments()
+    wViewModel.initAccountScreen()
     val uiState by wViewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.Account)) },
+                navigationIcon = {
+                    if (uiState.isShowingUserComments) {
+                        IconButton(
+                            onClick = {
+                                wViewModel.onBackPressed()
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
+                    }
+                }
             )
         },
         bottomBar = {
@@ -58,18 +81,32 @@ fun AccountScreen(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
             )
             // 显示个人评论列表按钮
-            TextButton(
-                onClick = { wViewModel.getUserComments() }
+            if(!uiState.isShowingUserComments) {
+                TextButton(
+                    onClick = { wViewModel.getUserComments() }
+                ) {
+                    Text("查看我的评论")
+                }
+            }
+            // 显示个人评论列表
+            AnimatedVisibility(
+                visible = uiState.isShowingUserComments,
+                enter = slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 300)
+                ) + EnterTransition.None,
+                exit = slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 300)
+                )
             ) {
-                Text("查看我的评论")
+                MessageBoardContent(
+                    comments = wViewModel.comment.value,
+                    onLikeClicked = wViewModel::onLikeClicked,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
 
-            // 显示个人评论列表
-            if (uiState.isShowingUserComments) {
-                MessageBoardContent(comments = wViewModel.comment.value,
-                    onLikeClicked = wViewModel::onLikeClicked)
-            }
         }
     }
-
 }

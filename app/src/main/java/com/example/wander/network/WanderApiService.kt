@@ -62,6 +62,8 @@ interface WanderApiService {
     suspend fun isPlaceNameValid(@Path("placeName") placeName: String):Int
     @POST("users/login")
     suspend fun login(@Body user: User): Response<User>
+    @POST("users/create")
+    suspend fun create(@Body user: User): String
     @GET("messages/user/{userID}")
     suspend fun showingUserComments(@Path("userID") userID: Int):List<Comment>
 }

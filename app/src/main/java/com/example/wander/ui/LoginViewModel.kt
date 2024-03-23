@@ -28,6 +28,16 @@ class LoginViewModel: ViewModel() {
             }
         }
     }
+    fun create(user: User){
+        viewModelScope.launch {
+            if(authRepository.create(user)=="用户插入成功。"){
+                _loginState.value = LoginState(isLoggedIn = true,user=user)
+            }else{
+                _loginState.value = LoginState(createFail = true)
+            }
+        }
+    }
+
     fun dismissFailDialog() {
         _loginState.value =LoginState(loggedInFail=false)
     }
@@ -36,5 +46,6 @@ data class LoginState(
     val user: User? = null,
     val isLoggedIn: Boolean = false,
     val error: String? = null,
-    val loggedInFail:Boolean=false
+    val loggedInFail:Boolean=false,
+    val createFail:Boolean=false
 )
