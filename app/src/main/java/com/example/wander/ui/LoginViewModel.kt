@@ -28,8 +28,13 @@ class LoginViewModel : ViewModel() {
                 try {
                     val encryptedUsername = encrypt(username)
                     val encryptedPassword = encrypt(password)
-                    val user = authRepository.login(encryptedUsername, encryptedPassword)
-                    _loginState.value = LoginState(isLoggedIn = user != null, loggedInFail = user == null, user = user)
+                    val response = authRepository.login(encryptedUsername, encryptedPassword)
+                    if (response == null) {
+                        _loginState.value = LoginState(loggedInFail = true)
+                    } else {
+                        val decryptedUser = decryptUser(response)
+                        _loginState.value = LoginState(isLoggedIn = true, user = decryptedUser)
+                    }
                 } catch (e: IOException) {
                     loginState.value = LoginState(error = e.message ?: "IOException")
                 } catch (e: HttpException) {
@@ -61,12 +66,16 @@ class LoginViewModel : ViewModel() {
         val encryptedBytes = cipher.doFinal(input.toByteArray(Charsets.UTF_8))
         return Base64.encodeToString(encryptedBytes, Base64.NO_WRAP)
     }
-
-    private fun decrypt(input: String): String {
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(encryptionKey.toByteArray(), "AES"))
-        return String(cipher.doFinal(input.toByteArray(Charsets.UTF_8)))
+    private fun decryptUser(user: User): User {
+        val decryptedUsername = decrypt(user.userName)
+        val decryptedPassword = decrypt(user.userPassword)
+        return User(user.userID,decryptedUsername, decryptedPassword,user.vip)
     }
-
+    private fun decrypt(input: String): String {
+        val decodedBytes = Base64.decode(input, Base64.NO_WRAP)
+        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(encryptionKey.toByteArray(), "AES"))
+        return String(cipher.doFinal(decodedBytes), Charsets.UTF_8)
+    }
     fun dismissFailDialog() {
         _loginState.value = LoginState(loggedInFail = false, createFail = false)
     }

@@ -65,13 +65,15 @@ fun AccountScreen(
             WanderBottomNavigation(navController)
         },
 
-    ){
+    ){paddingValues ->
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(16.dp)
         ) {
             // 显示账户名称
+
             Text(
                 text = "账户: ${uiState.user?.userName ?: "未登录"}",
                 style = MaterialTheme.typography.displayLarge

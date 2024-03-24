@@ -59,8 +59,6 @@ fun SearchPlaceScreen(
             PlaceDetail(viewModel,uiState)
         }else
         {
-
-
         Column(
             modifier = modifier
                 .padding(paddingValues)
