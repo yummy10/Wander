@@ -9,7 +9,7 @@ data class UiState(
     val user: User? = null,
     val isPlaceNameValid: Boolean = true,
     val showSuccessDialog: Boolean = false,
-    val isShowingUserComments: Boolean = false
+    val isShowingUserComments: Boolean = false,
 ) {
 
 }

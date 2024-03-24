@@ -1,11 +1,12 @@
 package com.example.wander.data
 
+import com.example.wander.model.MyString
 import com.example.wander.model.User
 import com.example.wander.network.WanderApi
 
 interface AuthRepository {
     suspend fun login(username: String, password: String): User?
-    suspend fun create(user: User): String
+    suspend fun create(user: User): MyString
 }
 
 class NetworkAuthRepository:AuthRepository {
@@ -15,14 +16,13 @@ class NetworkAuthRepository:AuthRepository {
             if (response.isSuccessful && response.body() != null) {
                 response.body()
             } else {
-                // 处理登录失败的情况
                 null
             }
         } catch (e: Exception) {
             null
         }
     }
-    override suspend fun create(user: User): String {
+    override suspend fun create(user: User): MyString {
     return WanderApi.retrofitService.create(user)
     }
 }

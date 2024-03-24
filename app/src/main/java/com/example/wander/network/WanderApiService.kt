@@ -1,6 +1,7 @@
 package com.example.wander.network
 import com.example.wander.model.City
 import com.example.wander.model.Comment
+import com.example.wander.model.MyString
 import com.example.wander.model.Place
 import com.example.wander.model.PlaceRequest
 import com.example.wander.model.User
@@ -63,7 +64,7 @@ interface WanderApiService {
     @POST("users/login")
     suspend fun login(@Body user: User): Response<User>
     @POST("users/create")
-    suspend fun create(@Body user: User): String
+    suspend fun create(@Body user: User): MyString
     @GET("messages/user/{userID}")
     suspend fun showingUserComments(@Path("userID") userID: Int):List<Comment>
 }
