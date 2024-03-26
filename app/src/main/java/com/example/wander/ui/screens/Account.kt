@@ -28,6 +28,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.wander.R
+import com.example.wander.model.WanderScreen
+import com.example.wander.ui.LoginViewModel
 import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.WViewModel as WViewModel1
 
@@ -38,34 +40,30 @@ fun AccountScreen(
     wViewModel: WViewModel1,
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    viewModel: LoginViewModel
 ) {
     wViewModel.initAccountScreen()
     val uiState by wViewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.Account)) },
-                navigationIcon = {
-                    if (uiState.isShowingUserComments) {
-                        IconButton(
-                            onClick = {
-                                wViewModel.onBackPressed()
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
-                        }
+            TopAppBar(title = { Text(stringResource(R.string.Account)) }, navigationIcon = {
+                if (uiState.isShowingUserComments) {
+                    IconButton(onClick = {
+                        wViewModel.onBackPressed()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 }
-            )
+            })
         },
         bottomBar = {
             WanderBottomNavigation(navController)
         },
 
-    ){paddingValues ->
+        ) { paddingValues ->
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -83,21 +81,23 @@ fun AccountScreen(
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
             )
             // 显示个人评论列表按钮
-            if(!uiState.isShowingUserComments) {
-                TextButton(
-                    onClick = { wViewModel.getUserComments() }
-                ) {
-                    Text("查看我的评论")
+            if (!uiState.isShowingUserComments) {
+                TextButton(onClick = { wViewModel.getUserComments() }) {
+                    Text(stringResource(R.string.get_user_comments))
+                }
+                TextButton(onClick = {
+                    viewModel.logout()
+                    navController.navigate(WanderScreen.Greeting.name)
+                }) {
+                    Text(stringResource(R.string.logout_title))
                 }
             }
             // 显示个人评论列表
             AnimatedVisibility(
-                visible = uiState.isShowingUserComments,
-                enter = slideInHorizontally(
+                visible = uiState.isShowingUserComments, enter = slideInHorizontally(
                     initialOffsetX = { fullWidth -> fullWidth },
                     animationSpec = tween(durationMillis = 300)
-                ) + EnterTransition.None,
-                exit = slideOutHorizontally(
+                ) + EnterTransition.None, exit = slideOutHorizontally(
                     targetOffsetX = { fullWidth -> fullWidth },
                     animationSpec = tween(durationMillis = 300)
                 )

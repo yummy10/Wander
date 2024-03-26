@@ -41,6 +41,8 @@
     <string name="fail_create_title">注册失败</string>
     <string name="fail_empty_title">失败</string>
     <string name="fail_empty_message">用户名稱及密码不能为空</string>
+    <string name="logout_title">登出</string>
+    <string name="get_user_comments">查看我的评论</string>
 
 
 </resources>

@@ -36,8 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.wander.R
-import com.example.wander.WanderScreen
 import com.example.wander.model.Comment
+import com.example.wander.model.WanderScreen
 import com.example.wander.ui.NetsUiState
 import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.ErrorScreen
@@ -48,34 +48,29 @@ import com.example.wander.ui.components.WanderBottomNavigation
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MessageBoardScreen(
-    viewModel: WViewModel,
-    navController: NavHostController
+    viewModel: WViewModel, navController: NavHostController
 ) {
     viewModel.getMessages()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.message_board)) },
-            )
+    Scaffold(topBar = {
+        TopAppBar(
+            title = { Text(stringResource(R.string.message_board)) },
+        )
 
-        },
-        bottomBar = {
-            WanderBottomNavigation(navController)
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {navController.navigate(WanderScreen.Addmessage.name)},
-                modifier = Modifier.padding(16.dp),
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = stringResource(R.string.add_place),
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
+    }, bottomBar = {
+        WanderBottomNavigation(navController)
+    }, floatingActionButton = {
+        FloatingActionButton(
+            onClick = { navController.navigate(WanderScreen.Addmessage.name) },
+            modifier = Modifier.padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_add),
+                contentDescription = stringResource(R.string.add_place),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
         }
-    ) { paddingValues ->
+    }) { paddingValues ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -85,9 +80,9 @@ fun MessageBoardScreen(
             when (viewModel.messageBoardUiState) {
                 is NetsUiState.Loading -> LoadingScreen()
                 is NetsUiState.Success -> MessageBoardContent(
-                    comments = viewModel.comment.value,
-                    onLikeClicked = viewModel::onLikeClicked
+                    comments = viewModel.comment.value, onLikeClicked = viewModel::onLikeClicked
                 )
+
                 is NetsUiState.Error -> ErrorScreen(
                 )
             }
@@ -97,9 +92,7 @@ fun MessageBoardScreen(
 
 @Composable
 fun MessageBoardContent(
-    comments: List<Comment>,
-    onLikeClicked: (Int,Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    comments: List<Comment>, onLikeClicked: (Int, Boolean) -> Unit, modifier: Modifier = Modifier
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
@@ -108,8 +101,7 @@ fun MessageBoardContent(
     ) {
         items(comments) { message ->
             MessageItem(
-                comment = message,
-                onLikeClicked = onLikeClicked
+                comment = message, onLikeClicked = onLikeClicked
             )
         }
     }
@@ -117,9 +109,7 @@ fun MessageBoardContent(
 
 @Composable
 fun MessageItem(
-    comment: Comment,
-    onLikeClicked: (Int,Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    comment: Comment, onLikeClicked: (Int, Boolean) -> Unit, modifier: Modifier = Modifier
 ) {
     val isLiked = remember { mutableStateOf(false) }
     Card(
@@ -129,20 +119,17 @@ fun MessageItem(
             modifier = Modifier.padding(16.dp)
         ) {
             Row(modifier = modifier) {
-            Text(
-                text = comment.userName,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.width(32.dp))
-            Text(
-                text = comment.placeName,
-                style = MaterialTheme.typography.titleMedium
-            )
+                Text(
+                    text = comment.userName, style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.width(32.dp))
+                Text(
+                    text = comment.placeName, style = MaterialTheme.typography.titleMedium
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = comment.text,
-                style = MaterialTheme.typography.bodyMedium
+                text = comment.text, style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
@@ -155,17 +142,16 @@ fun MessageItem(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text =comment.mLike.toString(),
-                    style = MaterialTheme.typography.bodySmall
+                    text = comment.mLike.toString(), style = MaterialTheme.typography.bodySmall
                 )
                 Spacer(modifier = Modifier.width(32.dp))
-                IconButton(
-                    onClick = { onLikeClicked(comment.messageID,isLiked.value)
-                        isLiked.value = !isLiked.value}
-                ) {
+                IconButton(onClick = {
+                    onLikeClicked(comment.messageID, isLiked.value)
+                    isLiked.value = !isLiked.value
+                }) {
                     Icon(
                         imageVector = Icons.Filled.ThumbUp,
-                        contentDescription = stringResource(R.string.like) ,
+                        contentDescription = stringResource(R.string.like),
                         tint = if (isLiked.value) Color.Blue else Color.Gray
                     )
                 }

@@ -51,36 +51,39 @@ fun SearchPlaceScreen(
             )
         },
         bottomBar = {
-            WanderBottomNavigation(navController,)
+            WanderBottomNavigation(navController)
         }
-    ) {
-        paddingValues ->
+    ) { paddingValues ->
         if (!uiState.isShowingPlaceList) {
-            PlaceDetail(viewModel,uiState)
-        }else
-        {
-        Column(
-            modifier = modifier
-                .padding(paddingValues)
-                .padding(16.dp)
-        ) {
-            OutlinedTextField(
-                value = uiState.search,
-                onValueChange = { viewModel.getSearchPlaces(city = null, name = viewModel.updateSearch(it)) },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(stringResource(R.string.search_places_hint)) },
-                singleLine = true,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null
-                    )
-                }
-            )
+            PlaceDetail(viewModel, uiState)
+        } else {
+            Column(
+                modifier = modifier
+                    .padding(paddingValues)
+                    .padding(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = uiState.search,
+                    onValueChange = {
+                        viewModel.getSearchPlaces(
+                            city = null,
+                            name = viewModel.updateSearch(it)
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text(stringResource(R.string.search_places_hint)) },
+                    singleLine = true,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null
+                        )
+                    }
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            if (places.isNotEmpty()) {
+                if (places.isNotEmpty()) {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(vertical = 8.dp)
@@ -95,15 +98,15 @@ fun SearchPlaceScreen(
                     }
 
 
-            } else {
-                Text(
-                    text = stringResource(R.string.no_results_found),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.fillMaxSize(),
-                    textAlign = TextAlign.Center
-                )
+                } else {
+                    Text(
+                        text = stringResource(R.string.no_results_found),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-        }
         }
     }
 

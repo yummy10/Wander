@@ -34,9 +34,7 @@ import com.example.wander.ui.WViewModel
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AddPlaceScreen(
-    onBackPressed: () -> Unit,
-    wViewModel: WViewModel,
-    modifier: Modifier = Modifier
+    onBackPressed: () -> Unit, wViewModel: WViewModel, modifier: Modifier = Modifier
 ) {
     val currentCityName = wViewModel.uiState.value.currentPlace
     val currentCityId = wViewModel.uiState.value.currentId
@@ -44,51 +42,41 @@ fun AddPlaceScreen(
     var placeDescription by remember { mutableStateOf("") }
     var placeBody by remember { mutableStateOf("") }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.add_place)) },
-                navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back_button)
-                        )
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold(topBar = {
+        TopAppBar(title = { Text(stringResource(R.string.add_place)) }, navigationIcon = {
+            IconButton(onClick = onBackPressed) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back_button)
+                )
+            }
+        })
+    }) { paddingValues ->
         Column(
             modifier = modifier
                 .padding(paddingValues)
                 .padding(dimensionResource(R.dimen.padding_medium)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
-            TextField(
-                value = currentCityName,
+            TextField(value = currentCityName,
                 onValueChange = {},
                 enabled = false,
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text(currentCityName) }
-            )
+                label = { Text(currentCityName) })
 
-            OutlinedTextField(
-                value = placeName,
+            OutlinedTextField(value = placeName,
                 onValueChange = { placeName = it },
                 label = { Text(stringResource(R.string.place_name)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(
-                value = placeDescription,
+            OutlinedTextField(value = placeDescription,
                 onValueChange = { placeDescription = it },
                 label = { Text(stringResource(R.string.place_description)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(
-                value = placeBody,
+            OutlinedTextField(value = placeBody,
                 onValueChange = { placeBody = it },
                 label = { Text(stringResource(R.string.place_body)) },
                 modifier = Modifier
@@ -108,13 +96,12 @@ fun AddPlaceScreen(
                         placeImageName = "",
                         placeImagePath = ""
                     )
-                    wViewModel.addPlace(newPlace,currentCityName)
+                    wViewModel.addPlace(newPlace, currentCityName)
 
                     placeName = ""
                     placeDescription = ""
                     placeBody = ""
-                },
-                modifier = Modifier.fillMaxWidth()
+                }, modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.add_place))
             }

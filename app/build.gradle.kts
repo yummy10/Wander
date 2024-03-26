@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
+//    id("com.google.devtools.ksp") version "1.5.30-1.0.0"
 }
 
 android {
@@ -84,4 +85,8 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+    //Room
+//    implementation("androidx.room:room-runtime:2.6.1")
+//    ksp("androidx.room:room-compiler:2.6.1")
+//    implementation("androidx.room:room-ktx:2.6.1")
 }

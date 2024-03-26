@@ -35,8 +35,8 @@ import com.example.wander.ui.WViewModel
 import com.example.wander.ui.theme.WanderTheme
 
 @Composable
-fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = Modifier){
-    val onBackPressed = {wViewModel.resetHomeScreenStates()}
+fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = Modifier) {
+    val onBackPressed = { wViewModel.resetHomeScreenStates() }
     BackHandler {
         onBackPressed()
     }
@@ -63,11 +63,10 @@ fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = M
         }
     }
 }
+
 @Composable
 private fun DetailsScreenTopBar(
-    onBackButtonClicked: ()->Unit,
-    UiState: UiState,
-    modifier: Modifier = Modifier
+    onBackButtonClicked: () -> Unit, UiState: UiState, modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
@@ -126,9 +125,9 @@ private fun DetailsCard(
 @Preview
 @Composable
 private fun CardPreview() {
-    WanderTheme{
+    WanderTheme {
         val WViewModel: WViewModel = viewModel()
         val uiState by WViewModel.uiState.collectAsState()
-        PlaceDetail(WViewModel,uiState)
+        PlaceDetail(WViewModel, uiState)
     }
 }

@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.wander.R
-import com.example.wander.WanderScreen
+import com.example.wander.model.WanderScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -5,9 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class City(
-      val cityId: Int,
-      val cityName: String,
-      val cityImageName: String,
-      val cityImagePath: String
+    val cityId: Int, val cityName: String, val cityImageName: String, val cityImagePath: String
 
 )

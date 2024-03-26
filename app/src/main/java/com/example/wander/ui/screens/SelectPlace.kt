@@ -50,9 +50,7 @@ import com.example.wander.ui.theme.WanderTheme
 
 @Composable
 fun PlaceApp(
-    backButtonClicked: () -> Unit,
-    navigateToAddPlaceScreen: () -> Unit,
-    wViewModel: WViewModel
+    backButtonClicked: () -> Unit, navigateToAddPlaceScreen: () -> Unit, wViewModel: WViewModel
 ) {
     val uiState by wViewModel.uiState.collectAsState()
     when (wViewModel.placenetsUiState) {
@@ -66,6 +64,7 @@ fun PlaceApp(
         } else {
             PlaceDetail(wViewModel = wViewModel, uiState = uiState)
         }
+
         is NetsUiState.Error -> ErrorScreen()
     }
 
@@ -81,8 +80,7 @@ fun PlaceList(
 ) {
     val currentPlaceList by wViewModel.places.collectAsState(initial = emptyList())
 
-    Scaffold(
-        topBar = { WanderTopAppBar(backButtonClicked = backButtonClicked) },
+    Scaffold(topBar = { WanderTopAppBar(backButtonClicked = backButtonClicked) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = navigateToAddPlaceScreen,
@@ -95,8 +93,7 @@ fun PlaceList(
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         LazyColumn(contentPadding = paddingValues, modifier = modifier) {
             items(currentPlaceList) { place ->
                 PlaceListCard(
@@ -116,8 +113,7 @@ fun PlaceListCard(wViewModel: WViewModel, place: Place, modifier: Modifier = Mod
         Column(
             modifier = Modifier.animateContentSize(
                 animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessMedium
+                    dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMedium
                 )
             )
         ) {
@@ -151,16 +147,13 @@ fun PlaceListCard(wViewModel: WViewModel, place: Place, modifier: Modifier = Mod
 
 @Composable
 private fun ItemButton(
-    expanded: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    expanded: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier
 ) {
     IconButton(
-        onClick = onClick,
-        modifier = modifier
+        onClick = onClick, modifier = modifier
     ) {
         Icon(
-            imageVector = if (expanded) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
+            imageVector = if (!expanded) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
             contentDescription = stringResource(R.string.expand_button_content_description),
             tint = MaterialTheme.colorScheme.secondary
         )
@@ -169,28 +162,25 @@ private fun ItemButton(
 
 @Composable
 private fun PlaceIntro(
-    placeIntro: String,
-    modifier: Modifier = Modifier
+    placeIntro: String, modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.about),
-            style = MaterialTheme.typography.labelSmall
+            text = stringResource(R.string.about), style = MaterialTheme.typography.labelSmall
         )
         Text(
-            text = placeIntro,
-            style = MaterialTheme.typography.bodyLarge
+            text = placeIntro, style = MaterialTheme.typography.bodyLarge
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun view() {
+fun View() {
     WanderTheme(
         //darkTheme = true
     ) {
-        PlaceApp(wViewModel = viewModel(),backButtonClicked={},navigateToAddPlaceScreen={})
+        PlaceApp(wViewModel = viewModel(), backButtonClicked = {}, navigateToAddPlaceScreen = {})
     }
 
 }

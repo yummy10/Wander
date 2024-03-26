@@ -28,68 +28,54 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wander.R
 import com.example.wander.ui.LoginViewModel
 import com.example.wander.ui.WViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel(),
-    wViewModel: WViewModel,
-    onLoginSuccess: () -> Unit
+    viewModel: LoginViewModel, wViewModel: WViewModel, onLoginSuccess: () -> Unit
 ) {
+
     val loginState by viewModel.loginState
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isLogin by remember { mutableStateOf(true) }
     if (loginState.loggedInFail) {
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissFailDialog() },
+        AlertDialog(onDismissRequest = { viewModel.dismissFailDialog() },
             title = { Text(stringResource(R.string.fail_login_title)) },
             text = { Text(stringResource(R.string.fail_login_message)) },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.dismissFailDialog()
-                    }
-                ) {
+                TextButton(onClick = {
+                    viewModel.dismissFailDialog()
+                }) {
                     Text(stringResource(R.string.ok))
                 }
-            }
-        )
+            })
     }
     if (loginState.createFail) {
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissFailDialog() },
+        AlertDialog(onDismissRequest = { viewModel.dismissFailDialog() },
             title = { Text(stringResource(R.string.fail_create_title)) },
             text = { Text(stringResource(R.string.fail_create_message)) },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.dismissFailDialog()
-                    }
-                ) {
+                TextButton(onClick = {
+                    viewModel.dismissFailDialog()
+                }) {
                     Text(stringResource(R.string.ok))
                 }
-            }
-        )
+            })
     }
     if (loginState.emptyFail) {
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissFailDialog() },
+        AlertDialog(onDismissRequest = { viewModel.dismissFailDialog() },
             title = { Text(stringResource(R.string.fail_empty_title)) },
             text = { Text(stringResource(R.string.fail_empty_message)) },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.dismissFailDialog()
-                    }
-                ) {
+                TextButton(onClick = {
+                    viewModel.dismissFailDialog()
+                }) {
                     Text(stringResource(R.string.ok))
                 }
-            }
-        )
+            })
     }
     Column(
         modifier = Modifier
@@ -105,50 +91,44 @@ fun LoginScreen(
                 verticalAlignment = Alignment.CenterVertically // 垂直居中对齐
             ) {
                 Button(
-                    onClick = { isLogin = true },
-                    colors = ButtonDefaults.buttonColors(
+                    onClick = { isLogin = true }, colors = ButtonDefaults.buttonColors(
                         containerColor = if (isLogin) MaterialTheme.colorScheme.onPrimaryContainer else Color.Gray
-                    ),
-                    modifier = Modifier.weight(1f) // 设置权重为 1
+                    ), modifier = Modifier.weight(1f) // 设置权重为 1
                 ) {
                     Text(stringResource(R.string.login))
                 }
                 Spacer(modifier = Modifier.width(16.dp)) // 添加一些间距
 
                 Button(
-                    onClick = { isLogin = false },
-                    colors = ButtonDefaults.buttonColors(
+                    onClick = { isLogin = false }, colors = ButtonDefaults.buttonColors(
                         containerColor = if (!isLogin) MaterialTheme.colorScheme.onPrimaryContainer else Color.Gray
-                    ),
-                    modifier = Modifier.weight(1f) // 设置权重为 1
+                    ), modifier = Modifier.weight(1f) // 设置权重为 1
                 ) {
                     Text(stringResource(R.string.create))
                 }
             }
         }
-        OutlinedTextField(
-            value = username,
+        OutlinedTextField(value = username,
             onValueChange = { username = it },
             label = { Text("Username") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = password,
+        OutlinedTextField(value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        if(isLogin){
+        if (isLogin) {
             Button(
                 onClick = { viewModel.login(username, password) },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.login))
             }
-        }else{
+        } else {
             Button(
                 onClick = { viewModel.create(username, password) },
                 modifier = Modifier.fillMaxWidth()

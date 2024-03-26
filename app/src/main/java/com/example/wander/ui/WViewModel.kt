@@ -44,6 +44,10 @@ class WViewModel : ViewModel() {
     private val _comment = MutableStateFlow<List<Comment>>(emptyList())
     val comment: StateFlow<List<Comment>> = _comment
 
+    init {
+        clearPlaces()
+        getCities()
+    }
 
     fun updateUsername(user: User?) {
         _uiState.update {
@@ -52,12 +56,6 @@ class WViewModel : ViewModel() {
             )
         }
     }
-
-    init {
-        clearPlaces()
-        getCities()
-    }
-
 
     fun resetHomeScreenStates() {
         _uiState.update {
@@ -70,8 +68,7 @@ class WViewModel : ViewModel() {
     fun detailsScreenStates(place: Place) {
         _uiState.update {
             it.copy(
-                currentSelectedPlace = place,
-                isShowingPlaceList = false
+                currentSelectedPlace = place, isShowingPlaceList = false
             )
         }
     }
@@ -96,16 +93,9 @@ class WViewModel : ViewModel() {
     fun getSearchPlaces(name: String?, city: String?) {
         viewModelScope.launch {
             placenetsUiState = NetsUiState.Loading
-            placenetsUiState = try {
+            placenetsUiState = handleNetworkCall {
                 val repository = NetworkPlacesRepository()
                 _places.value = repository.getSearchPlaces(name, city)
-                NetsUiState.Success(
-                    "Success:  "
-                )
-            } catch (e: IOException) {
-                NetsUiState.Error
-            } catch (e: HttpException) {
-                NetsUiState.Error
             }
         }
     }
@@ -121,21 +111,14 @@ class WViewModel : ViewModel() {
     fun getCities() {
         viewModelScope.launch {
             netsUiState = NetsUiState.Loading
-            netsUiState = try {
+            netsUiState = handleNetworkCall {
                 val repository = NetworkCitiesRepository()
                 _cities.value = repository.getCities()
-                NetsUiState.Success(
-                    "Success:  "
-                )
-            } catch (e: IOException) {
-                NetsUiState.Error
-            } catch (e: HttpException) {
-                NetsUiState.Error
             }
         }
     }
 
-    fun updateSearch(search: String):String {
+    fun updateSearch(search: String): String {
         _uiState.update {
             it.copy(
                 search = search,
@@ -144,7 +127,7 @@ class WViewModel : ViewModel() {
         return search
     }
 
-    fun setCity(city: City){
+    fun setCity(city: City) {
         _uiState.update {
             it.copy(
                 currentPlace = city.cityName,
@@ -154,41 +137,32 @@ class WViewModel : ViewModel() {
         }
     }
 
-    fun addPlace(newPlace: Place,placeName:String) {
+    fun addPlace(newPlace: Place, placeName: String) {
         viewModelScope.launch {
-            try { val repository = NetworkPlacesRepository()
-                repository.addPlace(newPlace,placeName)
-                } catch (e: IOException) {
-                } catch (e: HttpException) {
-                }
-
+            handleNetworkCall {
+                val repository = NetworkPlacesRepository()
+                repository.addPlace(newPlace, placeName)
+            }
         }
     }
 
     fun getMessages() {
         viewModelScope.launch {
             messageBoardUiState = NetsUiState.Success("")
-            messageBoardUiState = try {
+            messageBoardUiState = handleNetworkCall {
                 val repository = NetworkMessagesRepository()
                 _comment.value = repository.getMessages()
-                NetsUiState.Success(
-                    "Success:"
-                )
-            } catch (e: IOException) {
-                NetsUiState.Error
-            } catch (e: HttpException) {
-                NetsUiState.Error
             }
         }
     }
 
-    fun onLikeClicked(i: Int,c:Boolean) {
+    fun onLikeClicked(i: Int, c: Boolean) {
         viewModelScope.launch {
             try {
                 val repository = NetworkMessagesRepository()
-                if(c){
+                if (c) {
                     repository.subLike(i)
-                }else{
+                } else {
                     repository.addLike(i)
                 }
                 getMessages()
@@ -198,10 +172,10 @@ class WViewModel : ViewModel() {
                 NetsUiState.Error
             }
         }
-   }
+    }
 
     fun addComment(newComment: Comment) {
-        newComment.userName= uiState.value.user?.userName ?:""
+        newComment.userName = uiState.value.user?.userName ?: ""
         viewModelScope.launch {
             try {
                 val repository = NetworkMessagesRepository()
@@ -209,8 +183,8 @@ class WViewModel : ViewModel() {
                 _uiState.update { it.copy(isPlaceNameValid = isPlaceNameValid) }
                 if (isPlaceNameValid) {
                     repository.addMessage(newComment)
-                    _uiState.update { it.copy(showSuccessDialog = true)}
-                    }
+                    _uiState.update { it.copy(showSuccessDialog = true) }
+                }
             } catch (e: IOException) {
 
             } catch (e: HttpException) {
@@ -219,6 +193,7 @@ class WViewModel : ViewModel() {
 
         }
     }
+
     fun dismissSuccessDialog() {
         _uiState.update { it.copy(showSuccessDialog = false) } // 隐藏提示框
     }
@@ -227,7 +202,7 @@ class WViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val repository = NetworkMessagesRepository()
-                _comment.value = repository.showingComments(uiState.value.user?.userID ?:0)
+                _comment.value = repository.showingComments(uiState.value.user?.userName ?: "")
                 _uiState.update { it.copy(isShowingUserComments = true) }
             } catch (e: IOException) {
             } catch (e: HttpException) {
@@ -243,4 +218,16 @@ class WViewModel : ViewModel() {
     fun onBackPressed() {
         _uiState.update { it.copy(isShowingUserComments = false) }
     }
+
+    private suspend fun <T> handleNetworkCall(block: suspend () -> T): NetsUiState {
+        return try {
+            block()
+            NetsUiState.Success("")
+        } catch (e: IOException) {
+            NetsUiState.Error
+        } catch (e: HttpException) {
+            NetsUiState.Error
+        }
+    }
+
 }

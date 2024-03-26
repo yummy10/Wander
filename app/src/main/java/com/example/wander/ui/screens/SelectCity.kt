@@ -46,6 +46,7 @@ fun CityApp(
             navController = navController,
             continueButtonClicked = continueButtonClicked
         )
+
         is NetsUiState.Error -> ErrorScreen()
     }
 
@@ -61,10 +62,8 @@ fun CityList(
 ) {
     val cities by wViewModel.cities.collectAsState(initial = emptyList())
 
-    Scaffold(
-        bottomBar = { WanderBottomNavigation(navController) },
-        topBar = { WanderTopAppBar(backButtonClicked = backButtonClicked) }
-    ) {
+    Scaffold(bottomBar = { WanderBottomNavigation(navController) },
+        topBar = { WanderTopAppBar(backButtonClicked = backButtonClicked) }) {
         LazyColumn(contentPadding = it, modifier = modifier) {
             items(cities) { city ->
                 CityItem(
@@ -99,7 +98,8 @@ fun CityItem(
                     },
                 contentScale = ContentScale.Crop
             )
-            Text(text = city.cityName,
+            Text(
+                text = city.cityName,
                 style = MaterialTheme.typography.displayMedium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
             )

@@ -20,17 +20,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wander.R
-import com.example.wander.ui.WViewModel
 import com.example.wander.ui.theme.WanderTheme
 
 
 @Composable
-fun Greeting(WViewModel: WViewModel,
-             message: String,
-             continueButtonClicked: () -> Unit,
-             modifier: Modifier = Modifier
+fun Greeting(
+    message: String,
+    continueButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val image = painterResource(R.drawable.world)
     Column(
@@ -45,21 +43,19 @@ fun Greeting(WViewModel: WViewModel,
             // 添加align修饰符
         )
         Text(
-            text = "Welcome to",
-            style = MaterialTheme.typography.displayMedium
+            text = "Welcome to", style = MaterialTheme.typography.displayMedium
 
         )
         Text(
-            text = message,
-            style = MaterialTheme.typography.displayLarge,
-            color = Color.Blue
+            text = message, style = MaterialTheme.typography.displayLarge, color = Color.Blue
         )
         Spacer(modifier = Modifier.height(90.dp))
         //EditUserName(uiState.userName, onValueChange = {WViewModel.updateUsername(it)}, modifier = Modifier)
-        Button(onClick = {continueButtonClicked()}) {
+        Button(onClick = { continueButtonClicked() }) {
             Text(
                 stringResource(R.string.continue_button),
-                style = MaterialTheme.typography.displayMedium)
+                style = MaterialTheme.typography.displayMedium
+            )
         }
 
     }
@@ -85,18 +81,20 @@ fun Greeting(WViewModel: WViewModel,
 //}
 
 
-
 @Preview(showBackground = true)
 @Composable
 fun Greetingview() {
     WanderTheme(
         //darkTheme = true
     ) {
-        Greeting(WViewModel = viewModel(),message=stringResource(R.string.app_name),
+        Greeting(
+            message = stringResource(R.string.app_name),
             continueButtonClicked = {},
-            modifier = Modifier.verticalScroll(rememberScrollState())//建立垂直捲軸,
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())//建立垂直捲軸,
                 .fillMaxSize()
-                .wrapContentSize(Alignment.Center))
+                .wrapContentSize(Alignment.Center)
+        )
     }
 
 }

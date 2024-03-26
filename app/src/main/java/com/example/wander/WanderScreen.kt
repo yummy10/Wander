@@ -13,6 +13,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.wander.model.WanderScreen
+import com.example.wander.ui.LoginViewModel
 import com.example.wander.ui.WViewModel
 import com.example.wander.ui.screens.AccountScreen
 import com.example.wander.ui.screens.AddComment
@@ -24,21 +26,11 @@ import com.example.wander.ui.screens.MessageBoardScreen
 import com.example.wander.ui.screens.PlaceApp
 import com.example.wander.ui.screens.SearchPlaceScreen
 
-enum class WanderScreen {
-    Greeting,
-    Citylist,
-    Selectlist,
-    Addplace,
-    Search,
-    Message,
-    Addmessage,
-    Login,
-    Account
-}
 
 @Composable
 fun WanderApp(
-    viewModel: WViewModel = viewModel(),
+    viewModel: LoginViewModel,
+    wviewModel: WViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
 ) {
     NavHost(
@@ -47,37 +39,62 @@ fun WanderApp(
         modifier = Modifier
     ) {
         composable(route = WanderScreen.Greeting.name) {
-            Greeting(viewModel,message= stringResource(R.string.app_name),
-                continueButtonClicked = {navController.navigate(WanderScreen.Login.name)},
-                modifier = Modifier.verticalScroll(rememberScrollState())//建立垂直捲軸,
+            Greeting(
+                message = stringResource(R.string.app_name),
+                continueButtonClicked = { navController.navigate(WanderScreen.Login.name) },
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())//建立垂直捲軸,
                     .fillMaxSize()
-                    .wrapContentSize(Alignment.Center
+                    .wrapContentSize(
+                        Alignment.Center
                     ),
             )
         }
         composable(route = WanderScreen.Citylist.name) {
-            CityApp(continueButtonClicked = {navController.navigate(WanderScreen.Selectlist.name)},backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},navController,viewModel,)
+            CityApp(
+                continueButtonClicked = { navController.navigate(WanderScreen.Selectlist.name) },
+                backButtonClicked = { navController.navigate(WanderScreen.Greeting.name) },
+                navController,
+                wviewModel,
+            )
         }
         composable(route = WanderScreen.Selectlist.name) {
-            PlaceApp(backButtonClicked = {navController.navigate(WanderScreen.Citylist.name)},navigateToAddPlaceScreen = {navController.navigate(WanderScreen.Addplace.name)},viewModel)
+            PlaceApp(
+                backButtonClicked = { navController.navigate(WanderScreen.Citylist.name) },
+                navigateToAddPlaceScreen = { navController.navigate(WanderScreen.Addplace.name) },
+                wviewModel
+            )
         }
         composable(route = WanderScreen.Addplace.name) {
-            AddPlaceScreen(onBackPressed = {navController.navigate(WanderScreen.Citylist.name)},viewModel)
+            AddPlaceScreen(
+                onBackPressed = { navController.navigate(WanderScreen.Citylist.name) },
+                wviewModel
+            )
         }
         composable(route = WanderScreen.Search.name) {
-            SearchPlaceScreen(backButtonClicked = {navController.navigate(WanderScreen.Greeting.name)},navController,viewModel)
+            SearchPlaceScreen(
+                backButtonClicked = { navController.navigate(WanderScreen.Greeting.name) },
+                navController,
+                wviewModel
+            )
         }
         composable(route = WanderScreen.Message.name) {
-            MessageBoardScreen(viewModel,navController)
+            MessageBoardScreen(wviewModel, navController)
         }
         composable(route = WanderScreen.Addmessage.name) {
-            AddComment(onBackPressed = {navController.navigate(WanderScreen.Citylist.name)},viewModel)
+            AddComment(
+                onBackPressed = { navController.navigate(WanderScreen.Citylist.name) },
+                wviewModel
+            )
         }
         composable(route = WanderScreen.Login.name) {
-            LoginScreen(wViewModel=viewModel,onLoginSuccess={navController.navigate(WanderScreen.Citylist.name)})
+            LoginScreen(
+                viewModel,
+                wViewModel = wviewModel,
+                onLoginSuccess = { navController.navigate(WanderScreen.Citylist.name) })
         }
         composable(route = WanderScreen.Account.name) {
-            AccountScreen(wViewModel=viewModel,navController)
+            AccountScreen(wViewModel = wviewModel, navController, viewModel = viewModel)
         }
 
     }

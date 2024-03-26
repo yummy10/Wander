@@ -65,8 +65,8 @@ interface WanderApiService {
     suspend fun login(@Body user: User): Response<User>
     @POST("users/create")
     suspend fun create(@Body user: User): MyString
-    @GET("messages/user/{userID}")
-    suspend fun showingUserComments(@Path("userID") userID: Int):List<Comment>
+    @GET("messages/user/{userName}")
+    suspend fun showingUserComments(@Path("userName") userName: String):List<Comment>
 }
 
 object WanderApi {
