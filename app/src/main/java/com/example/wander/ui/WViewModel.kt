@@ -216,7 +216,7 @@ class WViewModel : ViewModel() {
     }
 
     fun onBackPressed() {
-        _uiState.update { it.copy(isShowingUserComments = false) }
+        _uiState.update { it.copy(isShowingUserComments = false,isChangingPassword = false) }
     }
 
     private suspend fun <T> handleNetworkCall(block: suspend () -> T): NetsUiState {
@@ -228,6 +228,10 @@ class WViewModel : ViewModel() {
         } catch (e: HttpException) {
             NetsUiState.Error
         }
+    }
+
+    fun changePassword() {
+        _uiState.update { it.copy(isChangingPassword = true) }
     }
 
 }

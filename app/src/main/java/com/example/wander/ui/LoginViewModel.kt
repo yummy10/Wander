@@ -52,6 +52,37 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
         }
     }
 
+
+
+    fun changePassword(username: String, password: String,newPassword:String) {
+        viewModelScope.launch {
+            _loginState.value = LoginState(newEmptyFail = false,emptyFail= false,changeFail = false)
+            if (newPassword.isBlank()) {
+                _loginState.value = LoginState(newEmptyFail = true)
+            }else if (username.isBlank() || password.isBlank()) {
+                _loginState.value = LoginState(emptyFail = true)
+            } else {
+                try {
+                    val encryptedUsername = encrypt(username)
+                    val encryptedPassword = encrypt(password)
+                    val encryptedNewPassword = encrypt(newPassword)
+                    val response = authRepository.changePassword(encryptedUsername, encryptedPassword,encryptedNewPassword)
+                    if (response == null) {
+                        _loginState.value = LoginState(changeFail = true)
+                    } else {
+                        val decryptedUser = decryptUser(response)
+                        _loginState.value = LoginState(isChange = true, user = decryptedUser)
+                        sharedPreferences.edit().putString("username", username)
+                            .putString("password", newPassword).apply()
+                    }
+                } catch (e: IOException) {
+                    loginState.value = LoginState(error = e.message ?: "IOException")
+                } catch (e: HttpException) {
+                    loginState.value = LoginState(error = e.message ?: "HttpException")
+                }
+            }
+        }
+    }
     fun create(username: String, password: String) {
         viewModelScope.launch {
             if (username.isBlank() || password.isBlank()) {
@@ -79,7 +110,7 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
         _loginState.value = LoginState(isLoggedIn = false)
     }
 
-    fun isLoggedIn() {
+    private fun isLoggedIn() {
         val username = sharedPreferences.getString("username", null)
         val password = sharedPreferences.getString("password", null)
         if (username != null && password != null) {
@@ -107,8 +138,10 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
     }
 
     fun dismissFailDialog() {
-        _loginState.value = LoginState(loggedInFail = false, createFail = false)
+        _loginState.value = LoginState()
     }
+
+
 }
 
 data class LoginState(
@@ -118,4 +151,7 @@ data class LoginState(
     val loggedInFail: Boolean = false,
     val createFail: Boolean = false,
     val emptyFail: Boolean = false,
+    val changeFail: Boolean = false,
+    val isChange: Boolean = false,
+    val newEmptyFail: Boolean = false,
 )

@@ -6,6 +6,7 @@ import com.example.wander.model.Place
 import com.example.wander.model.PlaceRequest
 import com.example.wander.model.User
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -65,6 +66,8 @@ interface WanderApiService {
     suspend fun login(@Body user: User): Response<User>
     @POST("users/create")
     suspend fun create(@Body user: User): MyString
+    @POST("users/change")
+    suspend fun change(@Body user: ChangePasswordRequest): Response<User>
     @GET("messages/user/{userName}")
     suspend fun showingUserComments(@Path("userName") userName: String):List<Comment>
 }
@@ -74,3 +77,8 @@ object WanderApi {
         retrofit.create(WanderApiService::class.java)
     }
 }
+@Serializable
+data class ChangePasswordRequest(
+    val user:User,
+    val newPassword:String
+)

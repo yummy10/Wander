@@ -61,24 +61,7 @@ fun Greeting(
     }
 }
 
-//@SuppressLint("UnrememberedMutableState")
-//@Composable
-//fun EditUserName(name:String,
-//                 onValueChange: (String) -> Unit,
-//                 modifier: Modifier = Modifier
-//) {
-//    TextField(
-//        label = { Text(stringResource(R.string.user_name)) },
-//        value = name,
-//        onValueChange = onValueChange,
-//        singleLine = true,
-//        modifier = modifier,
-//        keyboardOptions = KeyboardOptions(
-//            keyboardType = KeyboardType.Text,
-//            imeAction = ImeAction.Done,
-//        )
-//    )
-//}
+
 
 
 @Preview(showBackground = true)
