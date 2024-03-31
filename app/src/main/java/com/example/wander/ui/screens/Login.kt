@@ -25,9 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import com.example.wander.R
 import com.example.wander.ui.LoginViewModel
 import com.example.wander.ui.WViewModel
@@ -80,7 +80,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(dimensionResource(id = R.dimen.padding_medium)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -97,7 +97,7 @@ fun LoginScreen(
                 ) {
                     Text(stringResource(R.string.login))
                 }
-                Spacer(modifier = Modifier.width(16.dp)) // 添加一些间距
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_medium))) // 添加一些间距
 
                 Button(
                     onClick = { isLogin = false }, colors = ButtonDefaults.buttonColors(
@@ -110,17 +110,17 @@ fun LoginScreen(
         }
         OutlinedTextField(value = username,
             onValueChange = { username = it },
-            label = { Text("Username") },
+            label = { Text(stringResource(R.string.username)) },
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
         OutlinedTextField(value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
         if (isLogin) {
             Button(
                 onClick = { viewModel.login(username, password) },
@@ -140,7 +140,7 @@ fun LoginScreen(
             Text(
                 text = loginState.error!!,
                 color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.padding_medium))
             )
         }
         if (loginState.isLoggedIn) {

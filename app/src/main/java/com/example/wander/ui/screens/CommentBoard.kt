@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,8 +32,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.wander.R
@@ -61,7 +67,7 @@ fun MessageBoardScreen(
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = { navController.navigate(WanderScreen.Addmessage.name) },
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(
@@ -95,8 +101,8 @@ fun MessageBoardContent(
     comments: List<Comment>, onLikeClicked: (Int, Boolean) -> Unit, modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(dimensionResource(id = R.dimen.padding_medium)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium)),
         modifier = modifier
     ) {
         items(comments) { message ->
@@ -107,16 +113,27 @@ fun MessageBoardContent(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun MessageItem(
     comment: Comment, onLikeClicked: (Int, Boolean) -> Unit, modifier: Modifier = Modifier
 ) {
     val isLiked = remember { mutableStateOf(false) }
+    var showMoreState = remember { mutableStateOf(false) }
+    val annotatedString = buildAnnotatedString {
+        withAnnotation(
+            tag = "SHOW_MORE",
+            annotation = "SHOW_MORE"
+        ) {
+            append(comment.text)
+        }
+    }
     Card(
         modifier = modifier
     ) {
+
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             Row(modifier = modifier) {
                 Text(
@@ -129,9 +146,24 @@ fun MessageItem(
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = comment.text, style = MaterialTheme.typography.bodyMedium
+                text = annotatedString,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = if (showMoreState.value) Int.MAX_VALUE else 3,
+                overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(8.dp))
+            if(!showMoreState.value) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    TextButton(onClick = { showMoreState.value = true }) {
+                        Text(stringResource(R.string.get_more))
+                    }
+                }
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -144,7 +176,7 @@ fun MessageItem(
                 Text(
                     text = comment.mLike.toString(), style = MaterialTheme.typography.bodySmall
                 )
-                Spacer(modifier = Modifier.width(32.dp))
+                Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = {
                     onLikeClicked(comment.messageID, isLiked.value)
                     isLiked.value = !isLiked.value

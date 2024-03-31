@@ -43,14 +43,13 @@ fun Greeting(
             // 添加align修饰符
         )
         Text(
-            text = "Welcome to", style = MaterialTheme.typography.displayMedium
+            text = stringResource(R.string.welcome), style = MaterialTheme.typography.displayMedium
 
         )
         Text(
             text = message, style = MaterialTheme.typography.displayLarge, color = Color.Blue
         )
         Spacer(modifier = Modifier.height(90.dp))
-        //EditUserName(uiState.userName, onValueChange = {WViewModel.updateUsername(it)}, modifier = Modifier)
         Button(onClick = { continueButtonClicked() }) {
             Text(
                 stringResource(R.string.continue_button),

@@ -41,6 +41,8 @@ import com.example.wander.ui.LoginViewModel
 import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.WanderBottomNavigation
 
+private const val s = "账户: "
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -89,12 +91,12 @@ fun AccountScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             // 显示账户名称
 
             Text(
-                text = "账户: ${uiState.user?.userName ?: "未登录"}",
+                stringResource(R.string.account_name) + (uiState.user?.userName ?: stringResource(R.string.unlogged)),
                 style = MaterialTheme.typography.displayLarge
             )
             Divider(
@@ -193,7 +195,7 @@ fun EditPassword(
         )
         Button(
             onClick = {
-                viewModel.changePassword(uiState.user?.userName ?: "未登录", password,newPassword)
+                viewModel.changePassword(uiState.user?.userName ?: "", password,newPassword)
             },
             modifier = Modifier.fillMaxWidth()
         ) {

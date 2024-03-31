@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -149,6 +150,6 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
         )
-        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
+        Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)))
     }
 }

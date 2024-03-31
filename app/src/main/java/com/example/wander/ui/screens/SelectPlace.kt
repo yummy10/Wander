@@ -84,7 +84,7 @@ fun PlaceList(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = navigateToAddPlaceScreen,
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(

@@ -60,7 +60,7 @@ fun SearchPlaceScreen(
             Column(
                 modifier = modifier
                     .padding(paddingValues)
-                    .padding(16.dp)
+                    .padding(dimensionResource(id = R.dimen.padding_medium))
             ) {
                 OutlinedTextField(
                     value = uiState.search,
@@ -81,7 +81,7 @@ fun SearchPlaceScreen(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
 
                 if (places.isNotEmpty()) {
                     LazyColumn(
