@@ -119,7 +119,7 @@ fun MessageItem(
     comment: Comment, onLikeClicked: (Int, Boolean) -> Unit, modifier: Modifier = Modifier
 ) {
     val isLiked = remember { mutableStateOf(false) }
-    var showMoreState = remember { mutableStateOf(false) }
+    val showMoreState = remember { mutableStateOf(false) }
     val annotatedString = buildAnnotatedString {
         withAnnotation(
             tag = "SHOW_MORE",

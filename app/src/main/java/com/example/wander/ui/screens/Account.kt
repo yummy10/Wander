@@ -41,8 +41,6 @@ import com.example.wander.ui.LoginViewModel
 import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.WanderBottomNavigation
 
-private const val s = "账户: "
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
