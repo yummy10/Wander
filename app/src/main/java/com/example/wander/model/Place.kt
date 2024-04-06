@@ -15,5 +15,6 @@ data class Place(
 @Serializable
 data class PlaceRequest(
     val place: Place,
-    val placeName: String
+    val currentCityName: String,
 )
+

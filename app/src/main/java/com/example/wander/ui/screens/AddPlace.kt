@@ -1,6 +1,9 @@
 package com.example.wander.ui.screens
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,18 +32,22 @@ import androidx.compose.ui.unit.dp
 import com.example.wander.R
 import com.example.wander.model.Place
 import com.example.wander.ui.WViewModel
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AddPlaceScreen(
-    onBackPressed: () -> Unit, wViewModel: WViewModel, modifier: Modifier = Modifier
+    onBackPressed: () -> Unit, wViewModel: WViewModel, modifier: Modifier = Modifier,
+    mainActivity: com.example.wander.MainActivity
 ) {
     val currentCityName = wViewModel.uiState.value.currentPlace
     val currentCityId = wViewModel.uiState.value.currentId
     var placeName by remember { mutableStateOf("") }
     var placeDescription by remember { mutableStateOf("") }
     var placeBody by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    // 获取当前的 Context
 
     Scaffold(topBar = {
         TopAppBar(title = { Text(stringResource(R.string.add_place)) }, navigationIcon = {
@@ -85,6 +92,12 @@ fun AddPlaceScreen(
                 maxLines = Int.MAX_VALUE,
                 singleLine = false
             )
+            Button(onClick = {
+                mainActivity.openGallery()
+            }) {
+                Text(stringResource(R.string.upload_picture))
+            }
+
             Button(
                 onClick = {
                     val newPlace = Place(
@@ -96,8 +109,8 @@ fun AddPlaceScreen(
                         placeImageName = "",
                         placeImagePath = ""
                     )
-                    wViewModel.addPlace(newPlace, currentCityName)
-
+                        val imageUri = mainActivity.photoViewModel.getSelectedImageUri()
+                        wViewModel.addPlaceWithImage(context,newPlace, currentCityName,imageUri)
                     placeName = ""
                     placeDescription = ""
                     placeBody = ""
@@ -108,4 +121,3 @@ fun AddPlaceScreen(
         }
     }
 }
-

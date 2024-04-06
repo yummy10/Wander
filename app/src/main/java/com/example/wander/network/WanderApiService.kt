@@ -9,18 +9,21 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-const val BASE_URL = "http://192.168.3.13:80/api/"
+const val BASE_URL = "http://192.168.1.207:80/api/"
 val loggingInterceptor = HttpLoggingInterceptor().apply {
     level = HttpLoggingInterceptor.Level.BODY
 }
@@ -51,8 +54,11 @@ interface WanderApiService {
     @GET("messages")
     suspend fun getAllMessages(): List<Comment>
 
-    @POST("places")
+    @POST("places/add")
     suspend fun addPlace(@Body placeRequest: PlaceRequest)
+    @Multipart
+    @POST("places/addWithImage")
+    suspend fun addPlaceWithImage(@Part parts: List<MultipartBody.Part>): Response<Unit>
     @POST("messages")
     suspend fun addMessage(@Body comment: Comment)
 

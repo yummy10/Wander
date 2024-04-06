@@ -32,6 +32,7 @@ fun WanderApp(
     viewModel: LoginViewModel,
     wviewModel: WViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
+    mainActivity: MainActivity
 ) {
     NavHost(
         navController = navController,
@@ -68,7 +69,8 @@ fun WanderApp(
         composable(route = WanderScreen.Addplace.name) {
             AddPlaceScreen(
                 onBackPressed = { navController.navigate(WanderScreen.Citylist.name) },
-                wviewModel
+                wviewModel,
+                mainActivity = mainActivity
             )
         }
         composable(route = WanderScreen.Search.name) {

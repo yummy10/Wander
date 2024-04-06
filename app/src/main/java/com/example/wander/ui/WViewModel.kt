@@ -1,5 +1,7 @@
 package com.example.wander.ui
 
+import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,6 +30,7 @@ sealed interface NetsUiState {
 }
 
 class WViewModel : ViewModel() {
+
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var netsUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
@@ -73,22 +76,6 @@ class WViewModel : ViewModel() {
         }
     }
 
-//    fun getPlaces() {
-//        viewModelScope.launch {
-//            netsUiState = NetsUiState.Loading
-//            netsUiState = try {
-//                val repository = NetworkPlacesRepository()
-//                _places.value = repository.getPlaces()
-//                NetsUiState.Success(
-//                    "Success:  "
-//                )
-//            } catch (e: IOException) {
-//                NetsUiState.Error
-//            } catch (e: HttpException) {
-//                NetsUiState.Error
-//            }
-//        }
-//    }
 
     fun getSearchPlaces(name: String?, city: String?) {
         viewModelScope.launch {
@@ -137,11 +124,16 @@ class WViewModel : ViewModel() {
         }
     }
 
-    fun addPlace(newPlace: Place, placeName: String) {
+    fun addPlaceWithImage(context: Context, newPlace: Place, currentCityName: String, imageUri: Uri?) {
         viewModelScope.launch {
             handleNetworkCall {
                 val repository = NetworkPlacesRepository()
-                repository.addPlace(newPlace, placeName)
+
+                if (imageUri != null) {
+                    repository.addPlaceWithImage(context,newPlace, currentCityName, imageUri)
+                } else {
+                    repository.addPlace(newPlace, currentCityName)
+                }
             }
         }
     }
@@ -233,5 +225,8 @@ class WViewModel : ViewModel() {
     fun changePassword() {
         _uiState.update { it.copy(isChangingPassword = true) }
     }
+
+
+
 
 }

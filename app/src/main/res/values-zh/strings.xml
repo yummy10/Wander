@@ -55,4 +55,5 @@
     <string name="account_name">账户:</string>
     <string name="unlogged">未登录</string>
     <string name="welcome">欢迎来到</string>
+    <string name="upload_picture">Upload Picture</string>
 </resources>
