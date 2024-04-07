@@ -55,5 +55,6 @@
     <string name="account_name">帳號:</string>
     <string name="unlogged">未登入</string>
     <string name="welcome">歡迎來到</string>
-    <string name="upload_picture">Upload Picture</string>
+    <string name="upload_picture">上傳圖片</string>
+    <string name="success_add_place">地點已成功加入</string>
 </resources>

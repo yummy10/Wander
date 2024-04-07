@@ -50,10 +50,10 @@ class MainActivity : ComponentActivity() {
 
 
 
-    fun openCamera() {
-        // 启动相机
-       // cameraLauncher.launch(/* 相机参数 */)
-    }
+//    fun openCamera() {
+//        // 启动相机
+//       // cameraLauncher.launch(/* 相机参数 */)
+//    }
 
 
 }

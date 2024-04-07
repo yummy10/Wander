@@ -33,7 +33,9 @@ import com.example.wander.R
 import com.example.wander.model.Place
 import com.example.wander.ui.WViewModel
 import androidx.compose.ui.platform.LocalContext
-
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.collectAsState
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -41,6 +43,7 @@ fun AddPlaceScreen(
     onBackPressed: () -> Unit, wViewModel: WViewModel, modifier: Modifier = Modifier,
     mainActivity: com.example.wander.MainActivity
 ) {
+    val uiState by wViewModel.uiState.collectAsState()
     val currentCityName = wViewModel.uiState.value.currentPlace
     val currentCityId = wViewModel.uiState.value.currentId
     var placeName by remember { mutableStateOf("") }
@@ -48,6 +51,22 @@ fun AddPlaceScreen(
     var placeBody by remember { mutableStateOf("") }
     val context = LocalContext.current
     // 获取当前的 Context
+    if (uiState.isAddPlace) {
+        AlertDialog(
+            onDismissRequest = { wViewModel.dismissSuccessAddPlace() },
+            title = { Text(stringResource(R.string.success_dialog_title)) },
+            text = { Text(stringResource(R.string.success_add_place)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        wViewModel.dismissSuccessAddPlace()
+                    }
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            }
+        )
+    }
 
     Scaffold(topBar = {
         TopAppBar(title = { Text(stringResource(R.string.add_place)) }, navigationIcon = {
@@ -97,7 +116,6 @@ fun AddPlaceScreen(
             }) {
                 Text(stringResource(R.string.upload_picture))
             }
-
             Button(
                 onClick = {
                     val newPlace = Place(

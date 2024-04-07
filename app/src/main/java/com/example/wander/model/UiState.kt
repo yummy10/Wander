@@ -10,5 +10,6 @@ data class UiState(
     val isPlaceNameValid: Boolean = true,
     val showSuccessDialog: Boolean = false,
     val isShowingUserComments: Boolean = false,
-    val isChangingPassword:Boolean = false,
+    val isChangingPassword: Boolean = false,
+    val isAddPlace: Boolean = false,
 )

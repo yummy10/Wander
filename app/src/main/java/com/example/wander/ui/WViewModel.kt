@@ -134,6 +134,7 @@ class WViewModel : ViewModel() {
                 } else {
                     repository.addPlace(newPlace, currentCityName)
                 }
+                _uiState.update { it.copy(isAddPlace = true) }
             }
         }
     }
@@ -189,7 +190,9 @@ class WViewModel : ViewModel() {
     fun dismissSuccessDialog() {
         _uiState.update { it.copy(showSuccessDialog = false) } // 隐藏提示框
     }
-
+    fun dismissSuccessAddPlace() {
+        _uiState.update { it.copy(isAddPlace = false) } // 隐藏提示框
+    }
     fun getUserComments() {
         viewModelScope.launch {
             try {
