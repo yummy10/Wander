@@ -20,12 +20,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,11 +34,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.collectAsState
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import coil.compose.rememberAsyncImagePainter
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AddPlaceScreen(
-    onBackPressed: () -> Unit, wViewModel: WViewModel, modifier: Modifier = Modifier,
+    onBackPressed: () -> Unit,
+    wViewModel: WViewModel,
+    modifier: Modifier = Modifier,
     mainActivity: com.example.wander.MainActivity
 ) {
     val uiState by wViewModel.uiState.collectAsState()
@@ -50,6 +69,8 @@ fun AddPlaceScreen(
     var placeDescription by remember { mutableStateOf("") }
     var placeBody by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val photoViewModel = mainActivity.photoViewModel
+    val selectedImageUri by photoViewModel.selectedImageUri.observeAsState()
     // 获取当前的 Context
     if (uiState.isAddPlace) {
         AlertDialog(
@@ -60,6 +81,22 @@ fun AddPlaceScreen(
                 TextButton(
                     onClick = {
                         wViewModel.dismissSuccessAddPlace()
+                    }
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            }
+        )
+    }
+    if (uiState.isAddEmptyPlace) {
+        AlertDialog(
+            onDismissRequest = { wViewModel.dismissAddEmptyComment() },
+            title = { Text(stringResource(R.string.fail_empty_title)) },
+            text = { Text(stringResource(R.string.fail_add_place)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        wViewModel.dismissAddEmptyComment()
                     }
                 ) {
                     Text(stringResource(R.string.ok))
@@ -84,25 +121,29 @@ fun AddPlaceScreen(
                 .padding(dimensionResource(R.dimen.padding_medium)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         ) {
-            TextField(value = currentCityName,
+            TextField(
+                value = currentCityName,
                 onValueChange = {},
                 enabled = false,
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(currentCityName) })
 
-            OutlinedTextField(value = placeName,
+            OutlinedTextField(
+                value = placeName,
                 onValueChange = { placeName = it },
                 label = { Text(stringResource(R.string.place_name)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(value = placeDescription,
+            OutlinedTextField(
+                value = placeDescription,
                 onValueChange = { placeDescription = it },
                 label = { Text(stringResource(R.string.place_description)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(value = placeBody,
+            OutlinedTextField(
+                value = placeBody,
                 onValueChange = { placeBody = it },
                 label = { Text(stringResource(R.string.place_body)) },
                 modifier = Modifier
@@ -111,11 +152,21 @@ fun AddPlaceScreen(
                 maxLines = Int.MAX_VALUE,
                 singleLine = false
             )
-            Button(onClick = {
-                mainActivity.openGallery()
-            }) {
+            selectedImageUri?.let { uri ->
+                Image(
+                    painter = rememberAsyncImagePainter(model = uri),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(120.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            Button(
+                onClick = { mainActivity.openGallery() },
+            ) {
                 Text(stringResource(R.string.upload_picture))
             }
+
             Button(
                 onClick = {
                     val newPlace = Place(
@@ -127,15 +178,40 @@ fun AddPlaceScreen(
                         placeImageName = "",
                         placeImagePath = ""
                     )
+                    if(placeName!=""||placeDescription!=""||placeBody!="") {
                         val imageUri = mainActivity.photoViewModel.getSelectedImageUri()
-                        wViewModel.addPlaceWithImage(context,newPlace, currentCityName,imageUri)
-                    placeName = ""
-                    placeDescription = ""
-                    placeBody = ""
-                }, modifier = Modifier.fillMaxWidth()
+                        wViewModel.addPlaceWithImage(context, newPlace, currentCityName, imageUri)
+                        placeName = ""
+                        placeDescription = ""
+                        placeBody = ""
+                    }else{
+                        wViewModel.addEmptyPlace()
+                    }
+
+                },
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.add_place))
             }
         }
     }
+}
+
+@Composable
+fun <T> LiveData<T>.observeAsState(): State<T?> {
+    val initialValue: T? = value
+
+    val state = produceState(initialValue = initialValue) {
+        val observer = Observer<T> { value ->
+            this@produceState.value = value
+        }
+
+        observeForever(observer)
+
+        awaitDispose {
+            removeObserver(observer)
+        }
+    }
+
+    return state
 }

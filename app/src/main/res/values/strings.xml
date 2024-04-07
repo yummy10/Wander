@@ -57,4 +57,5 @@
     <string name="welcome">Welcome to</string>
     <string name="upload_picture">Upload Picture</string>
     <string name="success_add_place">Place Has Been Successfully Added</string>
+    <string name="fail_add_place">Cannot Be Empty</string>
 </resources>

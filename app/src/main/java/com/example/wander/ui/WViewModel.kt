@@ -186,7 +186,15 @@ class WViewModel : ViewModel() {
 
         }
     }
-
+    fun addEmptyComment() {
+        _uiState.update { it.copy(isPlaceNameValid = false) }
+    }
+    fun dismissAddEmptyComment() {
+        _uiState.update { it.copy(isAddEmptyPlace = false) }
+    }
+    fun addEmptyPlace() {
+        _uiState.update { it.copy(isAddEmptyPlace = true) }
+    }
     fun dismissSuccessDialog() {
         _uiState.update { it.copy(showSuccessDialog = false) } // 隐藏提示框
     }

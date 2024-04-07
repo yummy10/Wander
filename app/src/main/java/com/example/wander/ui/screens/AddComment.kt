@@ -111,7 +111,11 @@ fun AddComment(onBackPressed: () -> Unit,
                         text=text,
                         mLike=0
                     )
-                    wViewModel.addComment(newComment)
+                    if(placeName!="") {
+                        wViewModel.addComment(newComment)
+                    }else{
+                        wViewModel.addEmptyComment()
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

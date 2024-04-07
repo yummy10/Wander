@@ -12,4 +12,5 @@ data class UiState(
     val isShowingUserComments: Boolean = false,
     val isChangingPassword: Boolean = false,
     val isAddPlace: Boolean = false,
+    val isAddEmptyPlace: Boolean = false,
 )
