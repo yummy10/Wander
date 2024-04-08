@@ -3,9 +3,11 @@ package com.example.wander.ui.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -13,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,11 +24,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.wander.R
@@ -38,9 +43,11 @@ import com.example.wander.ui.WViewModel
 fun AddComment(onBackPressed: () -> Unit,
                wViewModel: WViewModel,
                modifier: Modifier = Modifier
-) { val uiState by wViewModel.uiState.collectAsState()
+) {
+    val uiState by wViewModel.uiState.collectAsState()
     var placeName by remember { mutableStateOf("") }
     var text by remember { mutableStateOf("") }
+    var rating by remember { mutableStateOf(0) }
     if (uiState.showSuccessDialog) {
         AlertDialog(
             onDismissRequest = { wViewModel.dismissSuccessDialog() },
@@ -102,14 +109,36 @@ fun AddComment(onBackPressed: () -> Unit,
                 maxLines = Int.MAX_VALUE,
                 singleLine = false
             )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(5) { index ->
+                    IconButton(
+                        onClick = { rating = index + 1 }, // 点击设置评分
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = if (index < rating) R.drawable.ic_star_filled else R.drawable.ic_star_outline
+                            ),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.primary
+                        )
+                    }
+                }
+            }
             Button(
                 onClick = {
                     val newComment = Comment(
-                        messageID= 0,
-                        userName="",
-                        placeName=placeName,
-                        text=text,
-                        mLike=0
+                        messageID = 0,
+                        userName = "",
+                        placeName = placeName,
+                        text = text,
+                        mLike = 0,
+                        star = star
                     )
                     if(placeName!="") {
                         wViewModel.addComment(newComment)

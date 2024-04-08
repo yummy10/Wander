@@ -9,4 +9,5 @@ data class Comment(
     val placeName: String,
     val text: String,
     val mLike: Int,
+    val star: Int,
 )
