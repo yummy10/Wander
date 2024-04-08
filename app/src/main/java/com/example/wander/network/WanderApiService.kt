@@ -72,6 +72,9 @@ interface WanderApiService {
     suspend fun login(@Body user: User): Response<User>
     @POST("users/create")
     suspend fun create(@Body user: User): MyString
+    @Multipart
+    @POST("users/addIcon")
+    suspend fun addIcon(@Part parts: List<MultipartBody.Part>): Response<Unit>
     @POST("users/change")
     suspend fun change(@Body user: ChangePasswordRequest): Response<User>
     @GET("messages/user/{userName}")

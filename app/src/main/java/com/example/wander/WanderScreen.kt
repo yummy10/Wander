@@ -96,7 +96,7 @@ fun WanderApp(
                 onLoginSuccess = { navController.navigate(WanderScreen.Citylist.name) })
         }
         composable(route = WanderScreen.Account.name) {
-            AccountScreen(wViewModel = wviewModel, navController, viewModel = viewModel)
+            AccountScreen(wViewModel = wviewModel, navController, viewModel = viewModel,mainActivity = mainActivity)
         }
 
     }

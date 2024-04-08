@@ -58,4 +58,7 @@
     <string name="upload_picture">上傳圖片</string>
     <string name="success_add_place">地點已成功加入</string>
     <string name="fail_add_place">不能為空</string>
+    <string name="star">評分:</string>
+    <string name="upload_icon">上傳個人資料圖片</string>
+    <string name="select_picture">選擇圖片</string>
 </resources>

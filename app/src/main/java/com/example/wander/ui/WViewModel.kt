@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.wander.data.NetworkAuthRepository
 import com.example.wander.data.NetworkCitiesRepository
 import com.example.wander.data.NetworkMessagesRepository
 import com.example.wander.data.NetworkPlacesRepository
@@ -138,7 +139,23 @@ class WViewModel : ViewModel() {
             }
         }
     }
+    fun addIcon(context: Context,name: String, imageUri: Uri?) {
+        viewModelScope.launch {
+            handleNetworkCall {
+                val repository = NetworkAuthRepository()
 
+                if (imageUri != null) {
+                    repository.addIcon(context, name, imageUri)
+                    _uiState.update { it.copy(isUploadingIconSuccess = true) }
+                } else {
+                    _uiState.update { it.copy(isUploadingIconFail = true) }
+                }
+            }
+        }
+    }
+    fun dismissAddIcon() {
+        _uiState.update { it.copy(isUploadingIconSuccess = false,isUploadingIconFail= false) }
+    }
     fun getMessages() {
         viewModelScope.launch {
             messageBoardUiState = NetsUiState.Success("")
@@ -219,7 +236,7 @@ class WViewModel : ViewModel() {
     }
 
     fun onBackPressed() {
-        _uiState.update { it.copy(isShowingUserComments = false,isChangingPassword = false) }
+        _uiState.update { it.copy(isShowingUserComments = false,isChangingPassword = false,isUploadingIcon = false) }
     }
 
     private suspend fun <T> handleNetworkCall(block: suspend () -> T): NetsUiState {
@@ -237,7 +254,8 @@ class WViewModel : ViewModel() {
         _uiState.update { it.copy(isChangingPassword = true) }
     }
 
-
-
+    fun uploadIcon() {
+        _uiState.update { it.copy(isUploadingIcon = true) }
+    }
 
 }

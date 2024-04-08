@@ -13,4 +13,7 @@ data class UiState(
     val isChangingPassword: Boolean = false,
     val isAddPlace: Boolean = false,
     val isAddEmptyPlace: Boolean = false,
+    val isUploadingIcon: Boolean = false,
+    val isUploadingIconSuccess: Boolean = false,
+    val isUploadingIconFail: Boolean = false,
 )

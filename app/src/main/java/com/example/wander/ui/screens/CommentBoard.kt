@@ -1,6 +1,7 @@
 package com.example.wander.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,9 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Card
@@ -31,7 +34,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,9 +46,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.wander.R
 import com.example.wander.model.Comment
 import com.example.wander.model.WanderScreen
+import com.example.wander.network.BASE_URL
 import com.example.wander.ui.NetsUiState
 import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.ErrorScreen
@@ -136,13 +143,41 @@ fun MessageItem(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             Row(modifier = modifier) {
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        model = "$BASE_URL/users/images/${comment.userName}.jpg"
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
                 Text(
-                    text = comment.userName, style = MaterialTheme.typography.titleMedium
+                    text = comment.userName, style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(modifier = Modifier.width(32.dp))
                 Text(
-                    text = comment.placeName, style = MaterialTheme.typography.titleMedium
+                    text = comment.placeName, style = MaterialTheme.typography.titleLarge
                 )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+            ) {
+                Text(
+                    stringResource(R.string.star), style = MaterialTheme.typography.titleMedium
+                )
+                repeat(5) { index ->
+                        Icon(
+                            painter = painterResource(
+                                id = if (index < comment.star) R.drawable.ic_star_filled else R.drawable.ic_star_outline
+                            ),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                }
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(

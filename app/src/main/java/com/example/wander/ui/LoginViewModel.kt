@@ -128,7 +128,7 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
     private fun decryptUser(user: User): User {
         val decryptedUsername = decrypt(user.userName)
         val decryptedPassword = decrypt(user.userPassword)
-        return User(user.userID, decryptedUsername, decryptedPassword, user.vip)
+        return User(user.userID, decryptedUsername, decryptedPassword, user.vip, user.icon)
     }
 
     private fun decrypt(input: String): String {
@@ -140,6 +140,7 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
     fun dismissFailDialog() {
         _loginState.value = LoginState()
     }
+
 
 
 }

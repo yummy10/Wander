@@ -24,7 +24,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -125,7 +124,7 @@ fun AddComment(onBackPressed: () -> Unit,
                                 id = if (index < rating) R.drawable.ic_star_filled else R.drawable.ic_star_outline
                             ),
                             contentDescription = null,
-                            tint = MaterialTheme.colors.primary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -138,7 +137,7 @@ fun AddComment(onBackPressed: () -> Unit,
                         placeName = placeName,
                         text = text,
                         mLike = 0,
-                        star = star
+                        star = rating
                     )
                     if(placeName!="") {
                         wViewModel.addComment(newComment)

@@ -6,16 +6,21 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,12 +36,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.wander.R
 import com.example.wander.model.WanderScreen
+import com.example.wander.network.BASE_URL
 import com.example.wander.ui.LoginViewModel
 import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.WanderBottomNavigation
@@ -48,11 +58,13 @@ fun AccountScreen(
     wViewModel: WViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel
+    viewModel: LoginViewModel,
+    mainActivity: com.example.wander.MainActivity
 ) {
     wViewModel.initAccountScreen()
     val uiState by wViewModel.uiState.collectAsState()
     val loginState by viewModel.loginState
+    val context = LocalContext.current
     if (loginState.isChange) {
         AlertDialog(onDismissRequest = { viewModel.dismissFailDialog() },
             title = { Text(stringResource(R.string.success_change_title)) },
@@ -65,10 +77,11 @@ fun AccountScreen(
                 }
             })
     }
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(stringResource(R.string.Account)) }, navigationIcon = {
-                if (uiState.isShowingUserComments||uiState.isChangingPassword) {
+                if (uiState.isShowingUserComments||uiState.isChangingPassword||uiState.isUploadingIcon) {
                     IconButton(onClick = {
                         wViewModel.onBackPressed()
                     }) {
@@ -92,17 +105,27 @@ fun AccountScreen(
                 .padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             // 显示账户名称
-
-            Text(
-                stringResource(R.string.account_name) + (uiState.user?.userName ?: stringResource(R.string.unlogged)),
-                style = MaterialTheme.typography.displayLarge
-            )
-            Divider(
+            Row {
+                Text(
+                    stringResource(R.string.account_name) + (uiState.user?.userName ?: stringResource(R.string.unlogged)),
+                    style = MaterialTheme.typography.displayLarge
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Image(
+                    painter = rememberAsyncImagePainter(model = "$BASE_URL${uiState.user?.icon}"),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
+            HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
             )
             // 显示个人评论列表按钮
-            if (!uiState.isShowingUserComments && !uiState.isChangingPassword) {
+            if (!uiState.isShowingUserComments && !uiState.isChangingPassword && !uiState.isUploadingIcon) {
                 TextButton(onClick = { wViewModel.getUserComments() }) {
                     Text(stringResource(R.string.get_user_comments))
                 }
@@ -116,6 +139,11 @@ fun AccountScreen(
                     wViewModel.changePassword()
                 }) {
                     Text(stringResource(R.string.change_password))
+                }
+                TextButton(onClick = {
+                    wViewModel.uploadIcon()
+                }) {
+                    Text(stringResource(R.string.upload_icon))
                 }
             }
             // 显示个人评论列表
@@ -145,7 +173,53 @@ fun AccountScreen(
             ) {
                 EditPassword(viewModel,wViewModel)
             }
+            AnimatedVisibility(
+                visible = uiState.isUploadingIcon, enter = slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 300)
+                ) + EnterTransition.None, exit = slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 300)
+                )
+            ) {
+                if (uiState.isUploadingIconSuccess) {
+                    AlertDialog(onDismissRequest = { wViewModel.dismissAddIcon() },
+                        title = { Text(stringResource(R.string.success_change_title)) },
+                        text = { Text(stringResource(R.string.success_change_title)) },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                wViewModel.dismissAddIcon()
+                            }) {
+                                Text(stringResource(R.string.ok))
+                            }
+                        })
+                }
+                if (uiState.isUploadingIconFail) {
+                    AlertDialog(onDismissRequest = { wViewModel.dismissAddIcon() },
+                        title = { Text(stringResource(R.string.fail_create_title)) },
+                        text = { Text(stringResource(R.string.fail_create_title)) },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                wViewModel.dismissAddIcon()
+                            }) {
+                                Text(stringResource(R.string.ok))
+                            }
+                        })
+                }
+                Column {
+                    Button(
+                        onClick = { mainActivity.openGallery() },
+                    ) {
+                        Text(stringResource(R.string.select_picture))
+                    }
+                    Button(
+                        onClick = { uiState.user?.userName?.let { wViewModel.addIcon(context, it,mainActivity.photoViewModel.getSelectedImageUri())} },
+                    ) {
+                        Text(stringResource(R.string.upload_icon))
+                    }
+                }
 
+            }
         }
     }
 }

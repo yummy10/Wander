@@ -58,4 +58,7 @@
     <string name="upload_picture">上传图片</string>
     <string name="success_add_place">您的地点已成功添加</string>
     <string name="fail_add_place">不能为空</string>
+    <string name="star">评分:</string>
+    <string name="upload_icon">上传个人资料图片</string>
+    <string name="select_picture">选择图片</string>
 </resources>

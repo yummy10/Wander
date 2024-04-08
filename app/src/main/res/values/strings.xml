@@ -58,4 +58,7 @@
     <string name="upload_picture">Upload Picture</string>
     <string name="success_add_place">Place Has Been Successfully Added</string>
     <string name="fail_add_place">Cannot Be Empty</string>
+    <string name="star">rating:</string>
+    <string name="upload_icon">Upload Profile Picture</string>
+    <string name="select_picture">Select Picture</string>
 </resources>

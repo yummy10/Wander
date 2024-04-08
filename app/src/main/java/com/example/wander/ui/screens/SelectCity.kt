@@ -85,7 +85,7 @@ fun CityItem(
     modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier) {
-        Column() {
+        Column {
             Image(
                 painter = rememberAsyncImagePainter(model = "$BASE_URL${city.cityImagePath}"),
                 contentDescription = city.cityName,
