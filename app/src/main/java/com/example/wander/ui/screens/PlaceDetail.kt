@@ -61,12 +61,13 @@ fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = M
                 place = uiState.currentSelectedPlace,
                 modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
             )
-            if(uiState.isCommentOK)
-            MessageBoardContent(
-                comments = wViewModel.comment.value,
-                onLikeClicked = wViewModel::onLikeClicked,
-                modifier = Modifier.fillMaxSize()
-            )
+            if(uiState.isCommentOK) {
+                MessageBoardContent(
+                    comments = wViewModel.comment.value,
+                    onLikeClicked = wViewModel::onLikeClicked,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
 
     }
