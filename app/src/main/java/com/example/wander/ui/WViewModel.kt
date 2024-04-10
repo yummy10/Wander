@@ -229,6 +229,20 @@ class WViewModel : ViewModel() {
             }
         }
     }
+    fun getPlaceComments(placeName:String){
+        viewModelScope.launch {
+            try {
+                val repository = NetworkMessagesRepository()
+                _comment.value = repository.showingPlaceComments(placeName)
+                _uiState.update { it.copy(isCommentOK = true) }
+            } catch (e: IOException) {
+            } catch (e: HttpException) {
+            }
+        }
+    }
+    fun commentNotOK(){
+        _uiState.update { it.copy(isCommentOK = false) }
+    }
 
     fun initAccountScreen() {
         clearComments()

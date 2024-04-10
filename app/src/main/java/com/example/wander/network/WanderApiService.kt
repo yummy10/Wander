@@ -79,6 +79,8 @@ interface WanderApiService {
     suspend fun change(@Body user: ChangePasswordRequest): Response<User>
     @GET("messages/user/{userName}")
     suspend fun showingUserComments(@Path("userName") userName: String):List<Comment>
+    @GET("messages/place/{placeName}")
+    suspend fun showingPlaceComments(@Path("placeName") placeName: String):List<Comment>
 }
 
 object WanderApi {

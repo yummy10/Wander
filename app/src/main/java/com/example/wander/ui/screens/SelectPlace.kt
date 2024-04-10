@@ -182,5 +182,4 @@ fun View() {
     ) {
         PlaceApp(wViewModel = viewModel(), backButtonClicked = {}, navigateToAddPlaceScreen = {})
     }
-
 }

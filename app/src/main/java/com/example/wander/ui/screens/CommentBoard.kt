@@ -141,8 +141,8 @@ fun MessageItem(
 
         Column(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
-        ) {
-            Row(modifier = modifier) {
+        ){
+            Row(modifier = modifier){
                 Image(
                     painter = rememberAsyncImagePainter(
                         model = "$BASE_URL/users/images/${comment.userName}.jpg"

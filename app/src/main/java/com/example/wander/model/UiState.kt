@@ -16,4 +16,5 @@ data class UiState(
     val isUploadingIcon: Boolean = false,
     val isUploadingIconSuccess: Boolean = false,
     val isUploadingIconFail: Boolean = false,
+    val isCommentOK: Boolean = false
 )

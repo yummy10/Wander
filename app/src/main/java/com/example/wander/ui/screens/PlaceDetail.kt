@@ -1,5 +1,6 @@
 package com.example.wander.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -34,33 +34,41 @@ import com.example.wander.model.UiState
 import com.example.wander.ui.WViewModel
 import com.example.wander.ui.theme.WanderTheme
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = Modifier) {
     val onBackPressed = { wViewModel.resetHomeScreenStates() }
+    wViewModel.commentNotOK()
     BackHandler {
         onBackPressed()
     }
     Box(modifier = modifier) {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.inverseOnSurface)
                 .padding(top = dimensionResource(R.dimen.padding_medium))
         ) {
-            item {
-                DetailsScreenTopBar(
-                    onBackPressed,
-                    uiState,
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                )
-                DetailsCard(
-                    Place = uiState.currentSelectedPlace,
-                    modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
-                )
-            }
+            DetailsScreenTopBar(
+                onBackPressed,
+                uiState,
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
+            )
+            DetailsCard(
+                wViewModel,
+                place = uiState.currentSelectedPlace,
+                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
+            )
+            if(uiState.isCommentOK)
+            MessageBoardContent(
+                comments = wViewModel.comment.value,
+                onLikeClicked = wViewModel::onLikeClicked,
+                modifier = Modifier.fillMaxSize()
+            )
         }
+
     }
 }
 
@@ -100,20 +108,22 @@ private fun DetailsScreenTopBar(
 
 @Composable
 private fun DetailsCard(
-    Place: Place,
+    wViewModel: WViewModel,
+    place: Place,
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
+        wViewModel.getPlaceComments(place.placeName)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small))
         ) {
             Text(
-                text = Place.placeIntroduction,
+                text = place.placeIntroduction,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -126,8 +136,8 @@ private fun DetailsCard(
 @Composable
 private fun CardPreview() {
     WanderTheme {
-        val WViewModel: WViewModel = viewModel()
-        val uiState by WViewModel.uiState.collectAsState()
-        PlaceDetail(WViewModel, uiState)
+        val wViewModel: WViewModel = viewModel()
+        val uiState by wViewModel.uiState.collectAsState()
+        PlaceDetail(wViewModel, uiState)
     }
 }

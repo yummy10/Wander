@@ -10,6 +10,7 @@ interface MessagesRepository {
     suspend fun subLike(messageId: Int)
     suspend fun isPlaceNameValid(placeName: String): Boolean
     suspend fun showingComments(userName: String): List<Comment>
+    suspend fun showingPlaceComments(placeName: String): List<Comment>
 }
 
 class NetworkMessagesRepository : MessagesRepository {
@@ -36,5 +37,8 @@ class NetworkMessagesRepository : MessagesRepository {
 
     override suspend fun showingComments(userName: String): List<Comment> {
         return WanderApi.retrofitService.showingUserComments(userName)
+    }
+    override suspend fun showingPlaceComments(placeName: String): List<Comment> {
+        return WanderApi.retrofitService.showingPlaceComments(placeName)
     }
 }
