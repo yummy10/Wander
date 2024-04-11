@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,9 +45,9 @@ fun AddComment(onBackPressed: () -> Unit,
                modifier: Modifier = Modifier
 ) {
     val uiState by wViewModel.uiState.collectAsState()
-    var placeName by remember { mutableStateOf("") }
+    var placeName by remember { mutableStateOf(uiState.commentPlace) }
     var text by remember { mutableStateOf("") }
-    var rating by remember { mutableStateOf(0) }
+    var rating by remember { mutableIntStateOf(0) }
     if (uiState.showSuccessDialog) {
         AlertDialog(
             onDismissRequest = { wViewModel.dismissSuccessDialog() },

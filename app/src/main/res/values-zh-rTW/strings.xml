@@ -61,4 +61,5 @@
     <string name="star">評分:</string>
     <string name="upload_icon">上傳個人資料圖片</string>
     <string name="select_picture">選擇圖片</string>
+    <string name="city_name">城市名稱</string>
 </resources>

@@ -40,10 +40,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.wander.R
 import com.example.wander.model.WanderScreen
 import com.example.wander.network.BASE_URL
@@ -106,13 +108,21 @@ fun AccountScreen(
         ) {
             // 显示账户名称
             Row {
+                val imagePainter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("$BASE_URL${uiState.user?.icon}")
+                        .error(R.drawable.default_avatar) // Use error for server-side errors
+                        .build(),
+                    placeholder = painterResource(R.drawable.loading_img),
+                    error = painterResource(R.drawable.default_avatar) // Fallback for other errors
+                )
                 Text(
                     stringResource(R.string.account_name) + (uiState.user?.userName ?: stringResource(R.string.unlogged)),
                     style = MaterialTheme.typography.displayLarge
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Image(
-                    painter = rememberAsyncImagePainter(model = "$BASE_URL${uiState.user?.icon}"),
+                    painter = imagePainter,
                     contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)

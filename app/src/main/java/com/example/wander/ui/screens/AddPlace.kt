@@ -126,7 +126,7 @@ fun AddPlaceScreen(
                 onValueChange = {},
                 enabled = false,
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text(currentCityName) })
+                label = { Text(stringResource(R.string.city_name)) })
 
             OutlinedTextField(
                 value = placeName,

@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -101,7 +101,7 @@ fun WanderBottomNavigation(
             }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Filled.Chat, contentDescription = null) },
+            icon = { Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = null) },
             label = { Text(stringResource(R.string.Chat)) },
             selected = currentRoute == WanderScreen.Message.name,
             onClick = {

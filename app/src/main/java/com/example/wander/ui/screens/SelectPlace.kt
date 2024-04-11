@@ -31,13 +31,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.wander.R
 import com.example.wander.model.Place
 import com.example.wander.network.BASE_URL
@@ -46,11 +47,10 @@ import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.ErrorScreen
 import com.example.wander.ui.components.LoadingScreen
 import com.example.wander.ui.components.WanderTopAppBar
-import com.example.wander.ui.theme.WanderTheme
 
 @Composable
 fun PlaceApp(
-    backButtonClicked: () -> Unit, navigateToAddPlaceScreen: () -> Unit, wViewModel: WViewModel
+    backButtonClicked: () -> Unit, navigateToAddPlaceScreen: () -> Unit, wViewModel: WViewModel,navController: NavHostController
 ) {
     val uiState by wViewModel.uiState.collectAsState()
     when (wViewModel.placenetsUiState) {
@@ -62,7 +62,7 @@ fun PlaceApp(
                 navigateToAddPlaceScreen = navigateToAddPlaceScreen
             )
         } else {
-            PlaceDetail(wViewModel = wViewModel, uiState = uiState)
+            PlaceDetail(wViewModel = wViewModel, uiState = uiState,navController = navController)
         }
 
         is NetsUiState.Error -> ErrorScreen()
@@ -117,8 +117,16 @@ fun PlaceListCard(wViewModel: WViewModel, place: Place, modifier: Modifier = Mod
                 )
             )
         ) {
+            val imagePainter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("$BASE_URL${place.placeImagePath}")
+                    .error(R.drawable.no_img)
+                    .build(),
+                placeholder = painterResource(R.drawable.loading_img),
+                error = painterResource(R.drawable.no_img)
+            )
             Image(
-                painter = rememberAsyncImagePainter(model = "$BASE_URL${place.placeImagePath}"),
+                painter = imagePainter,
                 contentDescription = place.placeImageName,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -171,15 +179,5 @@ private fun PlaceIntro(
         Text(
             text = placeIntro, style = MaterialTheme.typography.bodyLarge
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun View() {
-    WanderTheme(
-        //darkTheme = true
-    ) {
-        PlaceApp(wViewModel = viewModel(), backButtonClicked = {}, navigateToAddPlaceScreen = {})
     }
 }

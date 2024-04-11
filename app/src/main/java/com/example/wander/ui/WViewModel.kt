@@ -87,7 +87,9 @@ class WViewModel : ViewModel() {
             }
         }
     }
-
+    fun setCommentPlace(name: String = ""){
+        _uiState.update { it.copy(commentPlace = name) }
+    }
     fun clearPlaces() {
         _places.value = emptyList()
     }

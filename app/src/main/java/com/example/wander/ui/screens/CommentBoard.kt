@@ -2,6 +2,7 @@ package com.example.wander.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.wander.R
 import com.example.wander.model.Comment
 import com.example.wander.model.WanderScreen
@@ -73,7 +76,8 @@ fun MessageBoardScreen(
         WanderBottomNavigation(navController)
     }, floatingActionButton = {
         FloatingActionButton(
-            onClick = { navController.navigate(WanderScreen.Addmessage.name) },
+            onClick = { viewModel.setCommentPlace()
+                navController.navigate(WanderScreen.Addmessage.name)},
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
@@ -143,20 +147,28 @@ fun MessageItem(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
         ){
             Row(modifier = modifier){
+                val imagePainter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data("$BASE_URL/users/images/${comment.userName}.jpg")
+                        .error(R.drawable.default_avatar) // Use error for server-side errors
+                        .build(),
+                    placeholder = painterResource(R.drawable.loading_img),
+                    error = painterResource(R.drawable.default_avatar) // Fallback for other errors
+                )
                 Image(
-                    painter = rememberAsyncImagePainter(
-                        model = "$BASE_URL/users/images/${comment.userName}.jpg"
-                    ),
+                    painter = imagePainter,
                     contentDescription = null,
                     modifier = Modifier
                         .size(36.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Gray, CircleShape),
                     contentScale = ContentScale.Crop
                 )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = comment.userName, style = MaterialTheme.typography.titleLarge
                 )
-                Spacer(modifier = Modifier.width(32.dp))
+                Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = comment.placeName, style = MaterialTheme.typography.titleLarge
                 )

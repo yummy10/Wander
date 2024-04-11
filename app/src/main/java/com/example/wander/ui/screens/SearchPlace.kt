@@ -55,7 +55,7 @@ fun SearchPlaceScreen(
         }
     ) { paddingValues ->
         if (!uiState.isShowingPlaceList) {
-            PlaceDetail(viewModel, uiState)
+            PlaceDetail(viewModel, uiState,navController = navController)
         } else {
             Column(
                 modifier = modifier

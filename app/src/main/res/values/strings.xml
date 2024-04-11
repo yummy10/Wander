@@ -61,4 +61,5 @@
     <string name="star">rating:</string>
     <string name="upload_icon">Upload Profile Picture</string>
     <string name="select_picture">Select Picture</string>
+    <string name="city_name">City Name</string>
 </resources>

@@ -63,7 +63,8 @@ fun WanderApp(
             PlaceApp(
                 backButtonClicked = { navController.navigate(WanderScreen.Citylist.name) },
                 navigateToAddPlaceScreen = { navController.navigate(WanderScreen.Addplace.name) },
-                wviewModel
+                wviewModel,
+                navController
             )
         }
         composable(route = WanderScreen.Addplace.name) {

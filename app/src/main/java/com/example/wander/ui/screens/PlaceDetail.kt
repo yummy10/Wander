@@ -15,64 +15,74 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.wander.R
 import com.example.wander.model.Place
 import com.example.wander.model.UiState
+import com.example.wander.model.WanderScreen
 import com.example.wander.ui.WViewModel
-import com.example.wander.ui.theme.WanderTheme
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition","UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = Modifier) {
+fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = Modifier,navController: NavHostController) {
     val onBackPressed = { wViewModel.resetHomeScreenStates() }
     wViewModel.commentNotOK()
-    BackHandler {
-        onBackPressed()
-    }
-    Box(modifier = modifier) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.inverseOnSurface)
-                .padding(top = dimensionResource(R.dimen.padding_medium))
-        ) {
-            DetailsScreenTopBar(
-                onBackPressed,
-                uiState,
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = dimensionResource(R.dimen.padding_medium))
-            )
-            DetailsCard(
-                wViewModel,
-                place = uiState.currentSelectedPlace,
-                modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
-            )
-            if(uiState.isCommentOK) {
-                MessageBoardContent(
-                    comments = wViewModel.comment.value,
-                    onLikeClicked = wViewModel::onLikeClicked,
-                    modifier = Modifier.fillMaxSize()
-                )
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick =  {wViewModel.setCommentPlace(uiState.currentSelectedPlace.placeName)
+                    navController.navigate(WanderScreen.Addmessage.name) },
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Text(text = stringResource(R.string.add_comment))
             }
+        }) {
+        BackHandler {
+            onBackPressed()
         }
+        Box(modifier = modifier) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                    .padding(top = dimensionResource(R.dimen.padding_medium))
+            ) {
+                DetailsScreenTopBar(
+                    onBackPressed,
+                    uiState,
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
+                )
+                DetailsCard(
+                    wViewModel,
+                    place = uiState.currentSelectedPlace,
+                    modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
+                )
+                if (uiState.isCommentOK) {
+                    MessageBoardContent(
+                        comments = wViewModel.comment.value,
+                        onLikeClicked = wViewModel::onLikeClicked,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
 
+        }
     }
 }
-
 @Composable
 private fun DetailsScreenTopBar(
     onBackButtonClicked: () -> Unit, UiState: UiState, modifier: Modifier = Modifier
@@ -130,15 +140,5 @@ private fun DetailsCard(
             )
 
         }
-    }
-}
-
-@Preview
-@Composable
-private fun CardPreview() {
-    WanderTheme {
-        val wViewModel: WViewModel = viewModel()
-        val uiState by wViewModel.uiState.collectAsState()
-        PlaceDetail(wViewModel, uiState)
     }
 }
