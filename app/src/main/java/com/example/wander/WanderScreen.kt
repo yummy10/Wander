@@ -19,8 +19,8 @@ import com.example.wander.ui.WViewModel
 import com.example.wander.ui.screens.AccountScreen
 import com.example.wander.ui.screens.AddComment
 import com.example.wander.ui.screens.AddPlaceScreen
-import com.example.wander.ui.screens.CityApp
-import com.example.wander.ui.screens.Greeting
+import com.example.wander.ui.screens.App
+import com.example.wander.ui.screens.CityList
 import com.example.wander.ui.screens.LoginScreen
 import com.example.wander.ui.screens.MessageBoardScreen
 import com.example.wander.ui.screens.PlaceApp
@@ -40,7 +40,7 @@ fun WanderApp(
         modifier = Modifier
     ) {
         composable(route = WanderScreen.Greeting.name) {
-            Greeting(
+            App(
                 message = stringResource(R.string.app_name),
                 continueButtonClicked = { navController.navigate(WanderScreen.Login.name) },
                 modifier = Modifier
@@ -49,10 +49,11 @@ fun WanderApp(
                     .wrapContentSize(
                         Alignment.Center
                     ),
+                wViewModel = wviewModel
             )
         }
         composable(route = WanderScreen.Citylist.name) {
-            CityApp(
+            CityList(
                 continueButtonClicked = { navController.navigate(WanderScreen.Selectlist.name) },
                 backButtonClicked = { navController.navigate(WanderScreen.Greeting.name) },
                 navController,

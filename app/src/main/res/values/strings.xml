@@ -62,4 +62,5 @@
     <string name="upload_icon">Upload Profile Picture</string>
     <string name="select_picture">Select Picture</string>
     <string name="city_name">City Name</string>
+    <string name="fail_change_title">Failed to upload image</string>
 </resources>

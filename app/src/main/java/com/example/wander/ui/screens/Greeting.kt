@@ -21,8 +21,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wander.R
+import com.example.wander.ui.NetsUiState
+import com.example.wander.ui.WViewModel
+import com.example.wander.ui.components.ErrorScreen
+import com.example.wander.ui.components.LoadingScreen
 import com.example.wander.ui.theme.WanderTheme
 
+@Composable
+fun App(
+    message: String,
+    continueButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+    wViewModel: WViewModel
+) {
+    when (wViewModel.netsUiState) {
+        is NetsUiState.Loading -> LoadingScreen()
+        is NetsUiState.Success -> Greeting(
+            message = message,
+            continueButtonClicked = continueButtonClicked,
+            modifier = modifier,
+        )
+
+        is NetsUiState.Error -> ErrorScreen()
+    }
+
+}
 
 @Composable
 fun Greeting(

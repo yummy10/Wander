@@ -31,33 +31,13 @@ import com.example.wander.ui.components.LoadingScreen
 import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.components.WanderTopAppBar
 
-@Composable
-fun CityApp(
-    continueButtonClicked: () -> Unit,
-    backButtonClicked: () -> Unit,
-    navController: NavHostController,
-    wViewModel: WViewModel
-) {
-    when (wViewModel.netsUiState) {
-        is NetsUiState.Loading -> LoadingScreen()
-        is NetsUiState.Success -> CityList(
-            backButtonClicked = backButtonClicked,
-            wViewModel = wViewModel,
-            navController = navController,
-            continueButtonClicked = continueButtonClicked
-        )
-
-        is NetsUiState.Error -> ErrorScreen()
-    }
-
-}
 
 @Composable
 fun CityList(
-    backButtonClicked: () -> Unit,
-    wViewModel: WViewModel,
-    navController: NavHostController,
     continueButtonClicked: () -> Unit,
+    backButtonClicked: () -> Unit,
+    navController: NavHostController,
+    wViewModel: WViewModel,
     modifier: Modifier = Modifier
 ) {
     val cities by wViewModel.cities.collectAsState(initial = emptyList())

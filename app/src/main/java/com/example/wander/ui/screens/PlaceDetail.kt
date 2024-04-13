@@ -6,86 +6,153 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.wander.R
 import com.example.wander.model.Place
 import com.example.wander.model.UiState
 import com.example.wander.model.WanderScreen
+import com.example.wander.ui.NetsUiState
 import com.example.wander.ui.WViewModel
+import com.example.wander.ui.components.ErrorScreen
+import com.example.wander.ui.components.LoadingScreen
 
-@SuppressLint("StateFlowValueCalledInComposition","UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = Modifier,navController: NavHostController) {
+fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = Modifier,navController: NavHostController
+) {
+    val placeName = derivedStateOf { uiState.currentSelectedPlace.placeName }
+
+    LaunchedEffect(placeName.value) {
+        wViewModel.getPlaceComments(placeName.value)
+    }
+    when (wViewModel.placeDetailUiState) {
+        is NetsUiState.Loading -> LoadingScreen()
+        is NetsUiState.Success -> PlaceDetail1(
+            wViewModel,
+            uiState,
+            modifier,
+            navController
+        )
+        is NetsUiState.Error -> ErrorScreen()
+    }
+
+}
+
+@SuppressLint("StateFlowValueCalledInComposition", "UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun PlaceDetail1(
+    wViewModel: WViewModel,
+    uiState: UiState,
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
     val onBackPressed = { wViewModel.resetHomeScreenStates() }
-    wViewModel.commentNotOK()
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick =  {wViewModel.setCommentPlace(uiState.currentSelectedPlace.placeName)
-                    navController.navigate(WanderScreen.Addmessage.name) },
+                onClick = {
+                    wViewModel.setCommentPlace(uiState.currentSelectedPlace.placeName)
+                    navController.navigate(WanderScreen.Addmessage.name)
+                },
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Text(text = stringResource(R.string.add_comment))
             }
-        }) {
+        }
+    ) {
         BackHandler {
             onBackPressed()
         }
         Box(modifier = modifier) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(top = dimensionResource(R.dimen.padding_medium))
             ) {
-                DetailsScreenTopBar(
-                    onBackPressed,
-                    uiState,
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = dimensionResource(R.dimen.padding_medium))
-                )
-                DetailsCard(
-                    wViewModel,
-                    place = uiState.currentSelectedPlace,
-                    modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
-                )
-                if (uiState.isCommentOK) {
-                    MessageBoardContent(
-                        comments = wViewModel.comment.value,
-                        onLikeClicked = wViewModel::onLikeClicked,
-                        modifier = Modifier.fillMaxSize()
+                item {
+                    DetailsScreenTopBar(
+                        onBackPressed,
+                        uiState,
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = dimensionResource(R.dimen.padding_medium))
                     )
                 }
-            }
 
+                item {
+                    DetailsCard(
+                        wViewModel,
+                        place = uiState.currentSelectedPlace,
+                        modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
+                    )
+                }
+
+                item {
+                    Text(
+                        text = stringResource(R.string.text),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    )
+                }
+
+                items(wViewModel.comment.value) { message ->
+                    MessageItem(
+                        comment = message,
+                        onLikeClicked = wViewModel::onLikeClicked,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                PaddingValues(
+                                    dimensionResource(id = R.dimen.padding_medium)
+                                )
+                            )
+                    )
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
+
+                }
+            }
         }
     }
 }
 @Composable
 private fun DetailsScreenTopBar(
-    onBackButtonClicked: () -> Unit, UiState: UiState, modifier: Modifier = Modifier
+    onBackButtonClicked: () -> Unit, uiState: UiState, modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
@@ -109,7 +176,7 @@ private fun DetailsScreenTopBar(
                 .padding(end = dimensionResource(R.dimen.padding_medium))
         ) {
             Text(
-                text = UiState.currentSelectedPlace.placeDescription,
+                text = uiState.currentSelectedPlace.placeDescription,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -127,7 +194,6 @@ private fun DetailsCard(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        wViewModel.getPlaceComments(place.placeName)
         Column(
             modifier = Modifier
                 .fillMaxWidth()

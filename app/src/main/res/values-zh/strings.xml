@@ -62,4 +62,5 @@
     <string name="upload_icon">上传个人资料图片</string>
     <string name="select_picture">选择图片</string>
     <string name="city_name">城市名称</string>
+    <string name="fail_change_title">上传图片失败</string>
 </resources>

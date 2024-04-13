@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -88,7 +89,7 @@ fun AccountScreen(
                         wViewModel.onBackPressed()
                     }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
                         )
                     }
@@ -117,7 +118,8 @@ fun AccountScreen(
                     error = painterResource(R.drawable.default_avatar) // Fallback for other errors
                 )
                 Text(
-                    stringResource(R.string.account_name) + (uiState.user?.userName ?: stringResource(R.string.unlogged)),
+                    stringResource(R.string.account_name) + (uiState.user?.userName
+                        ?: stringResource(R.string.unlogged)),
                     style = MaterialTheme.typography.displayLarge
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -134,98 +136,124 @@ fun AccountScreen(
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
             )
-            // 显示个人评论列表按钮
-            if (!uiState.isShowingUserComments && !uiState.isChangingPassword && !uiState.isUploadingIcon) {
-                TextButton(onClick = { wViewModel.getUserComments() }) {
-                    Text(stringResource(R.string.get_user_comments))
-                }
-                TextButton(onClick = {
-                    viewModel.logout()
-                    navController.navigate(WanderScreen.Greeting.name)
-                }) {
-                    Text(stringResource(R.string.logout_title))
-                }
-                TextButton(onClick = {
-                    wViewModel.changePassword()
-                }) {
-                    Text(stringResource(R.string.change_password))
-                }
-                TextButton(onClick = {
-                    wViewModel.uploadIcon()
-                }) {
-                    Text(stringResource(R.string.upload_icon))
-                }
-            }
-            // 显示个人评论列表
-            AnimatedVisibility(
-                visible = uiState.isShowingUserComments, enter = slideInHorizontally(
-                    initialOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = tween(durationMillis = 300)
-                ) + EnterTransition.None, exit = slideOutHorizontally(
-                    targetOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = tween(durationMillis = 300)
-                )
-            ) {
-                MessageBoardContent(
-                    comments = wViewModel.comment.value,
-                    onLikeClicked = wViewModel::onLikeClicked,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            AnimatedVisibility(
-                visible = uiState.isChangingPassword, enter = slideInHorizontally(
-                    initialOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = tween(durationMillis = 300)
-                ) + EnterTransition.None, exit = slideOutHorizontally(
-                    targetOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = tween(durationMillis = 300)
-                )
-            ) {
-                EditPassword(viewModel,wViewModel)
-            }
-            AnimatedVisibility(
-                visible = uiState.isUploadingIcon, enter = slideInHorizontally(
-                    initialOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = tween(durationMillis = 300)
-                ) + EnterTransition.None, exit = slideOutHorizontally(
-                    targetOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = tween(durationMillis = 300)
-                )
-            ) {
-                if (uiState.isUploadingIconSuccess) {
-                    AlertDialog(onDismissRequest = { wViewModel.dismissAddIcon() },
-                        title = { Text(stringResource(R.string.success_change_title)) },
-                        text = { Text(stringResource(R.string.success_change_title)) },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                wViewModel.dismissAddIcon()
-                            }) {
-                                Text(stringResource(R.string.ok))
+            Box{
+                Column {
+                    // 显示个人评论列表
+                    AnimatedVisibility(
+                        visible = uiState.isShowingUserComments, enter = slideInHorizontally(
+                            initialOffsetX = { fullWidth -> fullWidth },
+                            animationSpec = tween(durationMillis = 300)
+                        ) + EnterTransition.None, exit = slideOutHorizontally(
+                            targetOffsetX = { fullWidth -> fullWidth },
+                            animationSpec = tween(durationMillis = 300)
+                        )
+                    ) {
+                        MessageBoardContent(
+                            comments = wViewModel.comment.value,
+                            onLikeClicked = wViewModel::onLikeClicked,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    AnimatedVisibility(
+                        visible = uiState.isChangingPassword, enter = slideInHorizontally(
+                            initialOffsetX = { fullWidth -> fullWidth },
+                            animationSpec = tween(durationMillis = 300)
+                        ) + EnterTransition.None, exit = slideOutHorizontally(
+                            targetOffsetX = { fullWidth -> fullWidth },
+                            animationSpec = tween(durationMillis = 300)
+                        )
+                    ) {
+                        EditPassword(viewModel, wViewModel)
+                    }
+                    AnimatedVisibility(
+                        visible = uiState.isUploadingIcon, enter = slideInHorizontally(
+                            initialOffsetX = { fullWidth -> fullWidth },
+                            animationSpec = tween(durationMillis = 300)
+                        ) + EnterTransition.None, exit = slideOutHorizontally(
+                            targetOffsetX = { fullWidth -> fullWidth },
+                            animationSpec = tween(durationMillis = 300)
+                        )
+                    ) {
+                        if (uiState.isUploadingIconSuccess) {
+                            AlertDialog(onDismissRequest = { wViewModel.dismissAddIcon() },
+                                title = { Text(stringResource(R.string.success_change_title)) },
+                                text = { Text(stringResource(R.string.success_change_title)) },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        wViewModel.dismissAddIcon()
+                                    }) {
+                                        Text(stringResource(R.string.ok))
+                                    }
+                                })
+                        }
+                        if (uiState.isUploadingIconFail) {
+                            AlertDialog(onDismissRequest = { wViewModel.dismissAddIcon() },
+                                title = { Text(stringResource(R.string.fail_change_title)) },
+                                text = { Text(stringResource(R.string.fail_change_title)) },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        wViewModel.dismissAddIcon()
+                                    }) {
+                                        Text(stringResource(R.string.ok))
+                                    }
+                                })
+                        }
+                        Column {
+                            Button(
+                                onClick = { mainActivity.openGallery() },
+                            ) {
+                                Text(stringResource(R.string.select_picture))
                             }
-                        })
-                }
-                if (uiState.isUploadingIconFail) {
-                    AlertDialog(onDismissRequest = { wViewModel.dismissAddIcon() },
-                        title = { Text(stringResource(R.string.fail_create_title)) },
-                        text = { Text(stringResource(R.string.fail_create_title)) },
-                        confirmButton = {
-                            TextButton(onClick = {
-                                wViewModel.dismissAddIcon()
-                            }) {
-                                Text(stringResource(R.string.ok))
+                            Button(
+                                onClick = {
+                                    uiState.user?.userName?.let {
+                                        wViewModel.addIcon(
+                                            context,
+                                            it,
+                                            mainActivity.photoViewModel.getSelectedImageUri()
+                                        )
+                                    }
+                                },
+                            ) {
+                                Text(stringResource(R.string.upload_icon))
                             }
-                        })
+                        }
+
+                    }
                 }
                 Column {
-                    Button(
-                        onClick = { mainActivity.openGallery() },
+                    AnimatedVisibility(
+                        visible = !uiState.isShowingUserComments && !uiState.isChangingPassword && !uiState.isUploadingIcon,
+                        enter = slideInHorizontally(
+                            initialOffsetX = { fullWidth -> -fullWidth },
+                            animationSpec = tween(durationMillis = 300)
+                        ),
+                        exit = slideOutHorizontally(
+                            targetOffsetX = { fullWidth -> -fullWidth },
+                            animationSpec = tween(durationMillis = 300)
+                        )
                     ) {
-                        Text(stringResource(R.string.select_picture))
-                    }
-                    Button(
-                        onClick = { uiState.user?.userName?.let { wViewModel.addIcon(context, it,mainActivity.photoViewModel.getSelectedImageUri())} },
-                    ) {
-                        Text(stringResource(R.string.upload_icon))
+                        Column {
+                            TextButton(onClick = { wViewModel.getUserComments() }) {
+                                Text(stringResource(R.string.get_user_comments))
+                            }
+                            TextButton(onClick = {
+                                viewModel.logout()
+                                navController.navigate(WanderScreen.Greeting.name)
+                            }) {
+                                Text(stringResource(R.string.logout_title))
+                            }
+                            TextButton(onClick = {
+                                wViewModel.changePassword()
+                            }) {
+                                Text(stringResource(R.string.change_password))
+                            }
+                            TextButton(onClick = {
+                                wViewModel.uploadIcon()
+                            }) {
+                                Text(stringResource(R.string.upload_icon))
+                            }
+                        }
                     }
                 }
 

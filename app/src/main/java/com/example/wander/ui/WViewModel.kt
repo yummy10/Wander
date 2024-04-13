@@ -40,6 +40,8 @@ class WViewModel : ViewModel() {
         private set
     var messageBoardUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
         private set
+    var placeDetailUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
+        private set
 
     private val _cities = MutableStateFlow<List<City>>(emptyList())
     val cities: StateFlow<List<City>> = _cities
@@ -233,17 +235,15 @@ class WViewModel : ViewModel() {
     }
     fun getPlaceComments(placeName:String){
         viewModelScope.launch {
+            placeDetailUiState = NetsUiState.Loading
             try {
                 val repository = NetworkMessagesRepository()
                 _comment.value = repository.showingPlaceComments(placeName)
-                _uiState.update { it.copy(isCommentOK = true) }
+                placeDetailUiState = NetsUiState.Success("")
             } catch (e: IOException) {
             } catch (e: HttpException) {
             }
         }
-    }
-    fun commentNotOK(){
-        _uiState.update { it.copy(isCommentOK = false) }
     }
 
     fun initAccountScreen() {
