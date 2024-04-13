@@ -1,6 +1,7 @@
 package com.example.wander.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,9 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +41,7 @@ import com.example.wander.model.Comment
 import com.example.wander.ui.WViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "ProduceStateDoesNotAssignValue")
 @Composable
 fun AddComment(onBackPressed: () -> Unit,
                wViewModel: WViewModel,
@@ -48,6 +51,8 @@ fun AddComment(onBackPressed: () -> Unit,
     var placeName by remember { mutableStateOf(uiState.commentPlace) }
     var text by remember { mutableStateOf("") }
     var rating by remember { mutableIntStateOf(0) }
+    var isDropdownExpanded by remember { mutableStateOf(false) }
+    val places by wViewModel.places.collectAsState(initial = emptyList())
     if (uiState.showSuccessDialog) {
         AlertDialog(
             onDismissRequest = { wViewModel.dismissSuccessDialog() },
@@ -74,7 +79,7 @@ fun AddComment(onBackPressed: () -> Unit,
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_button)
                         )
                     }
@@ -90,15 +95,42 @@ fun AddComment(onBackPressed: () -> Unit,
         ) {
             OutlinedTextField(
                 value = placeName,
-                onValueChange = {placeName=it},
+                onValueChange = {
+                    placeName = it
+                    wViewModel.getSearchPlaces(name = it, city = null)
+                },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text(stringResource(R.string.place_name))},
-                supportingText = { // 显示支持文本
+                label = { Text(stringResource(R.string.place_name)) },
+                supportingText = {
                     if (!uiState.isPlaceNameValid) {
                         Text(stringResource(R.string.place_name_not_found))
                     }
+                },
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_dropdown),
+                        contentDescription = null,
+                        modifier = Modifier.clickable {
+                            isDropdownExpanded = !isDropdownExpanded
+                        }
+                    )
                 }
             )
+            DropdownMenu(
+                expanded = isDropdownExpanded,
+                onDismissRequest = { isDropdownExpanded = false },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                places.forEach { place ->
+                    DropdownMenuItem(
+                        onClick = {
+                            placeName = place.placeName
+                            isDropdownExpanded = false
+                        },
+                        text = { Text(place.placeName) }
+                    )
+                }
+            }
             OutlinedTextField(
                 value = text,
                 onValueChange = {text=it},
