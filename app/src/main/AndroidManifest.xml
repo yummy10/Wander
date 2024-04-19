@@ -10,6 +10,14 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
@@ -21,15 +29,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wander"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="1ed97fa89ec25792c7b769ce4bfd0d2f"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Wander">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MapActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Wander">
         </activity>
     </application>
 

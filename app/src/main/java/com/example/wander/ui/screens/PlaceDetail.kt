@@ -1,6 +1,7 @@
 package com.example.wander.ui.screens
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -32,10 +34,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.amap.api.maps.model.LatLng
+import com.example.wander.MapActivity
 import com.example.wander.R
 import com.example.wander.model.Place
 import com.example.wander.model.UiState
@@ -51,6 +56,7 @@ fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = M
 ) {
     val placeName = derivedStateOf { uiState.currentSelectedPlace.placeName }
 
+
     LaunchedEffect(placeName.value) {
         wViewModel.getPlaceComments(placeName.value)
     }
@@ -60,7 +66,7 @@ fun PlaceDetail(wViewModel: WViewModel, uiState: UiState, modifier: Modifier = M
             wViewModel,
             uiState,
             modifier,
-            navController
+            navController,
         )
         is NetsUiState.Error -> ErrorScreen()
     }
@@ -73,9 +79,10 @@ fun PlaceDetail1(
     wViewModel: WViewModel,
     uiState: UiState,
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val onBackPressed = { wViewModel.resetHomeScreenStates() }
+    val context = LocalContext.current
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -117,7 +124,20 @@ fun PlaceDetail1(
                         modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
                     )
                 }
+                item {
+                    Button(
+                        onClick = {
+                            val intent = Intent(context, MapActivity::class.java)
+                            intent.putExtra("LOCATION", LatLng(uiState.currentSelectedPlace.x,uiState.currentSelectedPlace.y))
+                            intent.putExtra("NAME", uiState.currentSelectedPlace.placeName)
+                            context.startActivity(intent)
 
+                        },
+                        modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_medium))
+                    ) {
+                        Text(stringResource(R.string.open_map))
+                    }
+                }
                 item {
                     Text(
                         text = stringResource(R.string.text),
@@ -150,6 +170,7 @@ fun PlaceDetail1(
         }
     }
 }
+
 @Composable
 private fun DetailsScreenTopBar(
     onBackButtonClicked: () -> Unit, uiState: UiState, modifier: Modifier = Modifier
@@ -208,3 +229,4 @@ private fun DetailsCard(
         }
     }
 }
+

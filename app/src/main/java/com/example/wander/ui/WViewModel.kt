@@ -5,6 +5,8 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wander.data.NetworkAuthRepository
@@ -31,7 +33,8 @@ sealed interface NetsUiState {
 }
 
 class WViewModel : ViewModel() {
-
+    private val _coordinates = MutableLiveData<Pair<Double,Double>>()
+    val coordinates: LiveData<Pair<Double,Double>> = _coordinates
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var netsUiState: NetsUiState by mutableStateOf(NetsUiState.Loading)
@@ -54,7 +57,12 @@ class WViewModel : ViewModel() {
         clearPlaces()
         getCities()
     }
-
+    fun setCoordinates(coordinates:Pair<Double,Double>) {
+        coordinates?.let {
+            _coordinates.postValue(coordinates)
+            _uiState.update { it.copy(isAddCoordinates = true) }
+        }
+    }
     fun updateUsername(user: User?) {
         _uiState.update {
             it.copy(
@@ -63,6 +71,9 @@ class WViewModel : ViewModel() {
         }
     }
 
+    fun noAddCoordinates(){
+        _uiState.update { it.copy(isAddCoordinates = false) }
+    }
     fun resetHomeScreenStates() {
         _uiState.update {
             it.copy(

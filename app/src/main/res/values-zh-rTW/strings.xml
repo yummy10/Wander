@@ -63,4 +63,7 @@
     <string name="select_picture">選擇圖片</string>
     <string name="city_name">城市名稱</string>
     <string name="fail_change_title">上傳圖片失敗</string>
+    <string name="open_map">打開地圖</string>
+    <string name="upload_attraction_location">上傳景點定位</string>
+    <string name="success_upload_attraction_location">上傳景點定位成功</string>
 </resources>

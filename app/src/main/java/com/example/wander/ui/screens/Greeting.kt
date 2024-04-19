@@ -88,9 +88,9 @@ fun Greeting(
 
 @Preview(showBackground = true)
 @Composable
-fun Greetingview() {
+fun GreetingView() {
     WanderTheme(
-        //darkTheme = true
+        darkTheme = true
     ) {
         Greeting(
             message = stringResource(R.string.app_name),
@@ -101,5 +101,4 @@ fun Greetingview() {
                 .wrapContentSize(Alignment.Center)
         )
     }
-
 }

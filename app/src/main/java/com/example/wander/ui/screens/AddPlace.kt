@@ -53,6 +53,9 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.compose.runtime.mutableDoubleStateOf
+import kotlinx.coroutines.*
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -68,6 +71,8 @@ fun AddPlaceScreen(
     var placeName by remember { mutableStateOf("") }
     var placeDescription by remember { mutableStateOf("") }
     var placeBody by remember { mutableStateOf("") }
+    val x = wViewModel.coordinates.value?.first ?:0.0
+    val y = wViewModel.coordinates.value?.second ?:0.0
     val context = LocalContext.current
     val photoViewModel = mainActivity.photoViewModel
     val selectedImageUri by photoViewModel.selectedImageUri.observeAsState()
@@ -81,6 +86,22 @@ fun AddPlaceScreen(
                 TextButton(
                     onClick = {
                         wViewModel.dismissSuccessAddPlace()
+                    }
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            }
+        )
+    }
+    if (uiState.isAddCoordinates) {
+        AlertDialog(
+            onDismissRequest = { wViewModel.noAddCoordinates() },
+            title = { Text(stringResource(R.string.success_dialog_title)) },
+            text = { Text(stringResource(R.string.success_upload_attraction_location)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        wViewModel.noAddCoordinates()
                     }
                 ) {
                     Text(stringResource(R.string.ok))
@@ -148,7 +169,7 @@ fun AddPlaceScreen(
                 label = { Text(stringResource(R.string.place_body)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(250.dp),
+                    .height(150.dp),
                 maxLines = Int.MAX_VALUE,
                 singleLine = false
             )
@@ -161,10 +182,22 @@ fun AddPlaceScreen(
                     contentScale = ContentScale.Crop
                 )
             }
-            Button(
-                onClick = { mainActivity.openGallery() },
-            ) {
-                Text(stringResource(R.string.upload_picture))
+            Row{
+                Button(
+                    onClick = { mainActivity.openGallery() },
+                    modifier = Modifier.weight(1f).fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.upload_picture))
+                }
+                Button(
+                    onClick = {
+                        // 这里需要在协程中调用initLocation，因为它是一个挂起函数
+                        mainActivity.initLocation()
+                    },
+                    modifier = Modifier.weight(1f).fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.upload_attraction_location))
+                }
             }
 
             Button(
@@ -176,7 +209,9 @@ fun AddPlaceScreen(
                         placeIntroduction = placeBody,
                         cityId = currentCityId,
                         placeImageName = "",
-                        placeImagePath = ""
+                        placeImagePath = "",
+                        x = x,
+                        y = y,
                     )
                     if(placeName!=""||placeDescription!=""||placeBody!="") {
                         val imageUri = mainActivity.photoViewModel.getSelectedImageUri()

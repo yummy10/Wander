@@ -21,7 +21,14 @@ android {
             useSupportLibrary = true
         }
     }
-
+    signingConfigs {
+        register("release") {
+            storeFile = file("C:\\Wander\\password\\ps.jks")
+            storePassword = "password"
+            keyAlias = "key0"
+            keyPassword = "password"
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -29,6 +36,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -49,6 +57,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
@@ -56,8 +65,8 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation ("androidx.activity:activity-ktx:1.8.2")
-    implementation ("androidx.fragment:fragment-ktx:1.6.2")
+    implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(platform("androidx.compose:compose-bom:2024.04.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -75,7 +84,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation ("androidx.compose.material:material:1.6.5")
+    implementation("androidx.compose.material:material:1.6.5")
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     // Retrofit with Kotlin serialization Converter
@@ -84,12 +93,14 @@ dependencies {
     // Kotlin serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation ("com.google.code.gson:gson:2.10.1")
-    //Room
-//    implementation("androidx.room:room-runtime:2.6.1")
-//    ksp("androidx.room:room-compiler:2.6.1")
-//    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+// AMap SDK 依赖项
+    implementation ("com.amap.api:3dmap:9.2.0") // 3D 地图 SDK
+    implementation ("com.amap.api:location:6.4.3") // 定位 SDK
+    implementation ("com.amap.api:search:9.2.0") // 搜索功能
 }

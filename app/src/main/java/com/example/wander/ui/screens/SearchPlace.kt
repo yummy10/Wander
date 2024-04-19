@@ -38,7 +38,7 @@ fun SearchPlaceScreen(
     backButtonClicked: () -> Unit,
     navController: NavHostController,
     viewModel: WViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val places by viewModel.places.collectAsState()
@@ -55,7 +55,7 @@ fun SearchPlaceScreen(
         }
     ) { paddingValues ->
         if (!uiState.isShowingPlaceList) {
-            PlaceDetail(viewModel, uiState,navController = navController)
+            PlaceDetail(viewModel, uiState,navController = navController,)
         } else {
             Column(
                 modifier = modifier

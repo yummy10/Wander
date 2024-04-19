@@ -63,4 +63,7 @@
     <string name="select_picture">Select Picture</string>
     <string name="city_name">City Name</string>
     <string name="fail_change_title">Failed to upload image</string>
+    <string name="open_map">Open map</string>
+    <string name="upload_attraction_location">Upload attraction location</string>
+    <string name="success_upload_attraction_location">Attraction location uploaded successfully</string>
 </resources>

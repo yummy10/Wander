@@ -4,7 +4,7 @@ data class UiState(
     val isShowingPlaceList: Boolean = true,
     val currentPlace: String = "",
     val currentId: Int = -1,
-    val currentSelectedPlace: Place = Place(-1, "", "", "", -1, "", ""),
+    val currentSelectedPlace: Place = Place(-1, "", "", "", -1, "", "",0.0,0.0),
     val search: String = "",
     val user: User? = null,
     val isPlaceNameValid: Boolean = true,
@@ -17,4 +17,5 @@ data class UiState(
     val isUploadingIconSuccess: Boolean = false,
     val isUploadingIconFail: Boolean = false,
     val commentPlace: String = "",
+    val isAddCoordinates: Boolean = false,
 )

@@ -10,7 +10,9 @@ data class Place(
     val placeIntroduction: String,
     val cityId: Int,
     val placeImageName: String,
-    val placeImagePath: String
+    val placeImagePath: String,
+    val x:Double,
+    val y:Double
 )
 @Serializable
 data class PlaceRequest(
