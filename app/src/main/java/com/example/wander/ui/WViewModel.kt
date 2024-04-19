@@ -81,6 +81,32 @@ class WViewModel : ViewModel() {
             )
         }
     }
+    fun getClosePlace() {
+        coordinates.value?.let { (x, y) ->
+            viewModelScope.launch {
+                handleNetworkCall {
+                    val repository = NetworkPlacesRepository()
+                    val places = repository.getPlaces()
+
+                    // 计算每个 Place 与指定坐标的距离(单位:公里)并存储在 Map 中
+                    val distanceMap = mutableMapOf<Place, Double>()
+                    places.forEach { place ->
+                        val latDiff = (x - place.x) * (Math.PI / 180)
+                        val lonDiff = (y - place.y) * (Math.PI / 180)
+                        val a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+                                Math.cos(x * (Math.PI / 180)) * Math.cos(place.x * (Math.PI / 180)) *
+                                Math.sin(lonDiff / 2) * Math.sin(lonDiff / 2)
+                        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+                        val distance = 6371 * c
+                        distanceMap[place] = distance
+                    }
+                    // 存储距离最小的三个 Place 和对应的距离
+                    val closePlace = distanceMap.entries.sortedBy { it.value }.take(3).associate { it.key to it.value }
+                    _uiState.update { it.copy(closePlace = closePlace) }
+                }
+            }
+        }
+    }
 
     fun detailsScreenStates(place: Place) {
         _uiState.update {

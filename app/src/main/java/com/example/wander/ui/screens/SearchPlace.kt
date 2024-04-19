@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,10 @@ import com.example.wander.R
 import com.example.wander.ui.WViewModel
 import com.example.wander.ui.components.WanderBottomNavigation
 import com.example.wander.ui.components.WanderTopAppBar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +44,7 @@ fun SearchPlaceScreen(
     navController: NavHostController,
     viewModel: WViewModel,
     modifier: Modifier = Modifier,
+    mainActivity: com.example.wander.MainActivity
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val places by viewModel.places.collectAsState()
@@ -55,7 +61,7 @@ fun SearchPlaceScreen(
         }
     ) { paddingValues ->
         if (!uiState.isShowingPlaceList) {
-            PlaceDetail(viewModel, uiState,navController = navController,)
+            PlaceDetail(viewModel, uiState, navController = navController,)
         } else {
             Column(
                 modifier = modifier
@@ -99,15 +105,51 @@ fun SearchPlaceScreen(
 
 
                 } else {
-                    Text(
-                        text = stringResource(R.string.no_results_found),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.fillMaxSize(),
-                        textAlign = TextAlign.Center
-                    )
+                    LazyColumn() {
+                        val closePlaceList = uiState.closePlace.keys.toList()
+                        item {
+                            Text(
+                                text = stringResource(R.string.no_results_found),
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        item {
+                            Button(
+                                onClick = {
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        mainActivity.initLocation()
+                                        delay(500)
+                                        viewModel.getClosePlace()
+                                    }
+                                },
+                            ) {
+                                Text(stringResource(R.string.find_close))
+                            }
+                        }
+                        items(closePlaceList.take(3)) { place ->
+                            Column {
+                                PlaceListCard(
+                                    place = place,
+                                    wViewModel = viewModel,
+                                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+                                )
+                                Text(
+                                    text =stringResource(R.string.distance)+"${
+                                        uiState.closePlace[place]?.let {
+                                            "%.2f km".format(
+                                                it
+                                            )
+                                        } ?: "N/A"
+                                    }",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-
 }

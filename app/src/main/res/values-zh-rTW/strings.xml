@@ -66,4 +66,7 @@
     <string name="open_map">打開地圖</string>
     <string name="upload_attraction_location">上傳景點定位</string>
     <string name="success_upload_attraction_location">上傳景點定位成功</string>
+    <string name="find_close">尋找最近景點</string>
+    <string name="distance">距離：</string>
+
 </resources>

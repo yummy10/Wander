@@ -18,4 +18,5 @@ data class UiState(
     val isUploadingIconFail: Boolean = false,
     val commentPlace: String = "",
     val isAddCoordinates: Boolean = false,
+    val closePlace: Map<Place, Double> = emptyMap()
 )

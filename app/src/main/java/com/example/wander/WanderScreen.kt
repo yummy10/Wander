@@ -79,7 +79,8 @@ fun WanderApp(
             SearchPlaceScreen(
                 backButtonClicked = { navController.navigate(WanderScreen.Greeting.name) },
                 navController,
-                wViewModel
+                wViewModel,
+                mainActivity = mainActivity
             )
         }
         composable(route = WanderScreen.Message.name) {

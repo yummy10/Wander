@@ -66,4 +66,7 @@
     <string name="open_map">Open map</string>
     <string name="upload_attraction_location">Upload attraction location</string>
     <string name="success_upload_attraction_location">Attraction location uploaded successfully</string>
+    <string name="find_close">Find nearest attractions</string>
+    <string name="distance">Distance:</string>
+
 </resources>

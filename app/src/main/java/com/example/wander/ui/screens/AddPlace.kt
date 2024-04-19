@@ -191,7 +191,6 @@ fun AddPlaceScreen(
                 }
                 Button(
                     onClick = {
-                        // 这里需要在协程中调用initLocation，因为它是一个挂起函数
                         mainActivity.initLocation()
                     },
                     modifier = Modifier.weight(1f).fillMaxWidth()
