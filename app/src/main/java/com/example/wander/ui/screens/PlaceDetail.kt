@@ -197,7 +197,7 @@ private fun DetailsScreenTopBar(
                 .padding(end = dimensionResource(R.dimen.padding_medium))
         ) {
             Text(
-                text = uiState.currentSelectedPlace.placeDescription,
+                text = uiState.currentSelectedPlace.placeName,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

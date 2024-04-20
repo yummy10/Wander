@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Wander</string>
     <string name="this_app_name">Wander</string>
-    <string name="continue_button">繼續</string>
+    <string name="continue_button">開始探索</string>
     <string name="user_name">輸入您的名字</string>
     <string name="expand_button_content_description">展開按鈕內容描述</string>
     <string name="about">關於：</string>
