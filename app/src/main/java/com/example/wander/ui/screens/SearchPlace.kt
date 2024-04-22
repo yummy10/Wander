@@ -135,13 +135,11 @@ fun SearchPlaceScreen(
                                     modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
                                 )
                                 Text(
-                                    text =stringResource(R.string.distance)+"${
-                                        uiState.closePlace[place]?.let {
-                                            "%.2f km".format(
-                                                it
-                                            )
-                                        } ?: "N/A"
-                                    }",
+                                    text =stringResource(R.string.distance)+ (uiState.closePlace[place]?.let {
+                                        "%.2f km".format(
+                                            it
+                                        )
+                                    } ?: "N/A"),
                                     style = MaterialTheme.typography.bodyMedium,
                                     modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
                                 )
